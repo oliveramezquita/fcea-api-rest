@@ -58,10 +58,6 @@ class GetAssets:
                 mapped_data['nombre_usuario'] = get_username(
                     item.get('username'))
                 mapped_data['notas'] = item.get('datos_generales/Notas')
-                # mapped_data['imagen_1'] = item.get(
-                #     'datos_generales/Foto_1', '')
-                # mapped_data['imagen_2'] = item.get(
-                #     'datos_generales/Foto_2', '')
                 mapped_data['ph'] = float_pfq(item, 'pH')
                 mapped_data['amonio'] = float_pfq(item, 'Amonio')
                 mapped_data['ortofosfatos'] = float_pfq(item, 'Fosforo')

@@ -1,18 +1,17 @@
 from koboapp.use_cases.get_assets import GetAssets
 from django.http import HttpResponse
+import os
 
 
 def assets(request):
     assets = GetAssets()
-    assets_response = assets.execute()
-    print(assets_response)
+    assets.execute()
 
     return HttpResponse("Assets")
 
 
 def asset_results(request, asset_uid):
     assets = GetAssets()
-    mapped_data = assets.get_assets_byid(asset_uid)
-    # print(mapped_data)
+    assets.get_assets_byid(asset_uid)
 
     return HttpResponse("Asset Results")

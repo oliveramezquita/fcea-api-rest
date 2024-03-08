@@ -1,7 +1,7 @@
 from koboapp.scripts.kobo import kobo_request
 from koboapp.scripts.formulas import *
 from fcea_api_rest.utils import insert_document
-from bson.objectid import ObjectId
+from bson import ObjectId
 
 
 class GetAssets:
@@ -10,9 +10,26 @@ class GetAssets:
             response = kobo_request(
                 path='assets.json'
             )
-
             data = response.json()['results']
-            return data
+            filtered_data = [
+                i for i in data if i['deployment_status'] == 'deployed']
+            self.insert_assets_data(filtered_data)
+
+        except Exception as e:
+            return e.args
+
+    def insert_assets_data(self, data):
+        try:
+            mapped_data = {}
+            for item in data:
+                mapped_data['_id'] = ObjectId()
+                mapped_data['name'] = item.get('name')
+                mapped_data['submission_count'] = item.get(
+                    'deployment__submission_count')
+                mapped_data['uid'] = item.get('uid')
+                # mapped_data['update'] = False
+                mapped_data['status'] = 'not updated'
+                insert_document('assets', mapped_data)
 
         except Exception as e:
             return e.args
@@ -24,13 +41,13 @@ class GetAssets:
             )
 
             data = response.json()['results']
-            self.insert_data(data)
+            self.insert_form_data(data)
             return data
 
         except Exception as e:
             return e.args
 
-    def insert_data(self, data):
+    def insert_form_data(self, data):
         try:
             mapped_data = {}
             for item in data:
@@ -100,7 +117,7 @@ class GetAssets:
                     item)
                 mapped_data['id_formulario'] = item.get('_xform_id_string')
                 mapped_data['archivos_adjuntos'] = item.get('_attachments')
-                insert_document('monitoreo_del_agua', mapped_data)
+                insert_document('submissions', mapped_data)
 
         except Exception as e:
             print(e.args)

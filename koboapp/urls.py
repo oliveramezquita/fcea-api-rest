@@ -3,6 +3,8 @@ from koboapp import views
 
 
 urlpatterns = [
-    path('assets', views.assets, name='kobo-assets'),
-    path('assets/<str:asset_uid>', views.asset_results, name='kobo-asset-results'),
+    path('projects', views.AllProjectsView.as_view(), name='projects'),
+    path('reference-sites', views.AllReferenceSitesView.as_view(),
+         name='reference-sites'),
+    path('submission', views.AllSubmissionView.as_view(), name='submission')
 ]

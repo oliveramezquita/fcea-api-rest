@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'koboapp',
-    'django_crontab'
+    'django_crontab',
+    'crud'
 ]
 
 MIDDLEWARE = [
@@ -126,5 +127,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('0 0 * * *', 'koboapp.cron.form_job')
+    ('0 0 * * *', 'koboapp.scripts.sync.sync_projects'),
+    ('15 0 * * *', 'koboapp.scripts.sync.sync_submission')
 ]

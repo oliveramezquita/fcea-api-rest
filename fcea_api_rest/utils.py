@@ -18,13 +18,23 @@ def _get_collection_handle(collection):
 
 
 def _set_collection(db_handle, collection):
-    collist = db_handle.list_collection_names()
     return db_handle[collection]
 
 
-def insert_document(collection, data):
+def get_collection(collection, filter):
     collection_handle = _get_collection_handle(collection)
-    if collection_handle.find_one({'_id': data['_id']}):
+    return list(collection_handle.find(filter))
+
+
+def insert_document(collection, data, filter):
+    collection_handle = _get_collection_handle(collection)
+    if collection_handle.find_one(filter):
         pass
     else:
         collection_handle.insert_one(data)
+
+
+def update_value(collection, filter, update):
+    collection_handle = _get_collection_handle(collection)
+    collection_handle.update_one(filter, {'$set': update})
+    return collection_handle.find_one(filter)

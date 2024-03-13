@@ -1,6 +1,6 @@
-from koboapp.scripts.kobo import kobo_request
+from fcea_monitoreo.utils import *
+from fcea_monitoreo.requests import kobo_request
 from koboapp.scripts.formulas import *
-from fcea_api_rest.utils import *
 from bson import ObjectId
 from datetime import datetime
 
@@ -11,6 +11,7 @@ def sync_projects():
             path='assets.json'
         )
         data = response.json()['results']
+        print(data)
         filtered_data = [
             i for i in data if i['deployment_status'] == 'deployed']
         _insert_projects(filtered_data)

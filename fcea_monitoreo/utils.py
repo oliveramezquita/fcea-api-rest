@@ -1,12 +1,13 @@
 from pymongo import MongoClient
+from decouple import config, Csv
 
 
 def _get_db_handle():
     client = MongoClient(
-        host='127.0.0.1',
-        port=int(27017),
-        username='root',
-        password='root'
+        host=config('DATABASE_HOST'),
+        port=int(config('DATABASE_PORT')),
+        username=config('DATABASE_USERNAME'),
+        password=config('DATABASE_PASSWORD')
     )
     db_handle = client['fceadb']
     return db_handle

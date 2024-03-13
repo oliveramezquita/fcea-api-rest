@@ -1,11 +1,12 @@
 from requests import get
+from decouple import config
 
 
 def kobo_request(path):
     kobo_url = "https://kf.kobotoolbox.org/api/v2/"
     url = f'{kobo_url}{path}'
     headers = {
-        "Authorization": "Token 358d87003bfd0cf4fd5ef0f2628b8095c4f6b267"
+        "Authorization": f"Token {config('KOBO_TOKEN')}"
     }
 
     response = get(url=url, headers=headers)

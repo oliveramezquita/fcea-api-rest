@@ -1,7 +1,8 @@
 from rest_framework import views
 from rest_framework.response import Response
-from fcea_api_rest.utils import get_collection
+from fcea_monitoreo.utils import get_collection
 from koboapp.scripts.serializers import ProjectsSerializer, SubmissionSerializer
+from koboapp.scripts.sync import sync_projects
 
 
 class AllProjectsView(views.APIView):

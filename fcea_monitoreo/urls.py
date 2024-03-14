@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('kobo/', include('koboapp.urls')),
-    path('api/', include('api.urls'))
+    path('monitoreo/admin/', admin.site.urls),
+    path('monitoreo/kobo/', include('koboapp.urls')),
+    path('monitoreo/api/', include('api.urls'))
 ]

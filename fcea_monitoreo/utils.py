@@ -7,7 +7,8 @@ def _get_db_handle():
         host=config('DATABASE_HOST'),
         port=int(config('DATABASE_PORT')),
         username=config('DATABASE_USERNAME'),
-        password=config('DATABASE_PASSWORD')
+        password=config('DATABASE_PASSWORD'),
+        authSource='admin'
     )
     db_handle = client['fceadb']
     return db_handle

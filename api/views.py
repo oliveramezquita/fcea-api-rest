@@ -9,3 +9,9 @@ class AnswersView(APIView):
             answers_use_case = SaveAnswersUseCase(
                 answers_raw_data=request.data)
             return answers_use_case.execute()
+
+
+class TestDataView(APIView):
+    def post(self, request):
+        testdata_use_case = SaveAnswersUseCase(answers_raw_data=request.data)
+        return testdata_use_case.test_data()

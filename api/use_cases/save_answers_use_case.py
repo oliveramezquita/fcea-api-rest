@@ -38,3 +38,11 @@ class SaveAnswersUseCase:
             data['temporada'] = item.get('Temporada')
             data['notas'] = item.get('Notas', '')
             insert_document('answers', data, {'_id': data['_id']})
+
+    def test_data(self):
+        data = self.answers_raw_data
+        print(data)
+        response = JsonResponse(data, safe=False)
+        response.status_code = HTTP_200_OK
+
+        return response

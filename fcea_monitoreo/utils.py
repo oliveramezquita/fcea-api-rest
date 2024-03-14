@@ -3,13 +3,15 @@ from decouple import config, Csv
 
 
 def _get_db_handle():
-    client = MongoClient(
-        host=config('DATABASE_HOST'),
-        port=int(config('DATABASE_PORT')),
-        username=config('DATABASE_USERNAME'),
-        password=config('DATABASE_PASSWORD'),
-        authSource='admin'
-    )
+    MONGO_HOST = config('DATABASE_HOST')
+    MONGO_PORT = config('DATABASE_PORT')
+    MONGO_USER = config('DATABASE_USERNAME')
+    MONGO_PASS = config('DATABASE_PASSWORD')
+
+    uri = "mongodb://{}:{}@{}:{}?authSource=admin".format(
+        MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT)
+    client = MongoClient(uri)
+
     db_handle = client['fceadb']
     return db_handle
 

@@ -44,7 +44,7 @@ def sync_submission():
             data = response.json()['results']
             if len(data) > 0:
                 _insert_submission(data)
-                update_value(
+                update_document(
                     'projects',
                     {'uid': project['uid']},
                     {'last_update': datetime.now()}

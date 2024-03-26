@@ -33,12 +33,13 @@ def get_collection(collection, filter):
 def insert_document(collection, data, filter):
     collection_handle = _get_collection_handle(collection)
     if collection_handle.find_one(filter):
-        pass
+        return False
     else:
         collection_handle.insert_one(data)
+        return True
 
 
-def update_value(collection, filter, update):
+def update_document(collection, filter, update):
     collection_handle = _get_collection_handle(collection)
     collection_handle.update_one(filter, {'$set': update})
     return collection_handle.find_one(filter)

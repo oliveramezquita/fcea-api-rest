@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "982837ab-8079-438e-a215-d04dd0efe8b3",
+		"name": "Monitoreo de Calidad del Agua",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "978479"
+	},
+	"item": [
+		{
+			"name": "Kobo",
+			"item": [
+				{
+					"name": "Data example",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "Token 358d87003bfd0cf4fd5ef0f2628b8095c4f6b267",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kf.kobotoolbox.org/api/v2/assets/a9darxhzhXRqEzYtGy7qXy/data.json",
+							"protocol": "https",
+							"host": [
+								"kf",
+								"kobotoolbox",
+								"org"
+							],
+							"path": [
+								"api",
+								"v2",
+								"assets",
+								"a9darxhzhXRqEzYtGy7qXy",
+								"data.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asseets",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "Token 358d87003bfd0cf4fd5ef0f2628b8095c4f6b267",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "Authorization",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://kf.kobotoolbox.org/api/v2/assets.json",
+							"protocol": "https",
+							"host": [
+								"kf",
+								"kobotoolbox",
+								"org"
+							],
+							"path": [
+								"api",
+								"v2",
+								"assets.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Rest",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Update user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"password\": \"pass123\",\n    \"confirm_password\": \"pass123\",\n    \"name\": \"Oliver\",\n    \"last_name\": \"Amézquita Morales\",\n    \"phone\": \"4775764663\",\n    \"institution\": \"Institución de Prueba\",\n    \"city\": \"León\",\n    \"state\": \"Guanajuato\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/users",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"role\": \"ADMIN\" \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/users",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}api/users",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"password\": \"oliver\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/login",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Forgot password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/forgot-password",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"forgot-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"password\": \"oliver\",\n    \"confirm_password\": \"oliver\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/reset-password",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"reset-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Submission",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/kobo/submission?waterbody=Rio_o_arroyo",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"kobo",
+								"submission"
+							],
+							"query": [
+								{
+									"key": "waterbody",
+									"value": "Rio_o_arroyo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Projects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/kobo/projects",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"kobo",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reference sites",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/kobo/reference-sites",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"kobo",
+								"reference-sites"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Crud Home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/crud/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"crud",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

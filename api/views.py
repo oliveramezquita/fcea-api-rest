@@ -32,7 +32,7 @@ class TestFormsappView(APIView):
 
 class UsersView(APIView):
     def get(self, request):
-        users_use_case = GetUsersUseCase()
+        users_use_case = GetUsersUseCase(request)
         return users_use_case.execute()
 
     def post(self, request):

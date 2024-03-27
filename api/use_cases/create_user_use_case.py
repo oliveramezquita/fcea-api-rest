@@ -9,6 +9,7 @@ class CreateUserUseCase:
     def __init__(self, user_raw_data):
         self.user_raw_data = user_raw_data
         self.user_raw_data['activated'] = False
+        self.user_raw_data['_deleted'] = False
 
     def execute(self):
         self.validate_params()

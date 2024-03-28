@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from decouple import config, Csv
+from decouple import config
 
 
 def _get_db_handle():

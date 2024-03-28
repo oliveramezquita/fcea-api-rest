@@ -13,6 +13,7 @@ h11==0.14.0
 idna==3.6
 importlib-metadata==7.0.1
 Markdown==3.5.2
+pycryptodome==3.20.0
 pymongo==4.6.2
 python-decouple==3.8
 pytz==2024.1

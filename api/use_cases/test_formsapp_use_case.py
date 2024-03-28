@@ -3,6 +3,8 @@ from rest_framework.status import (
 )
 from django.http import JsonResponse
 from api.scripts.formsapp_parse import get_mapped_data
+from fcea_monitoreo.functions import encrypt
+from urllib import parse
 
 
 class TestFormsappUseCase:
@@ -11,6 +13,15 @@ class TestFormsappUseCase:
         data = get_mapped_data()
         print(data)
         response = JsonResponse(data, safe=False)
+        response.status_code = HTTP_200_OK
+
+        return response
+
+    def encrypt_test(self, raw_data):
+        key = parse.quote_plus(encrypt(raw_data['email']))
+        print(encrypt(raw_data['email']))
+        print(key)
+        response = JsonResponse([], safe=False)
         response.status_code = HTTP_200_OK
 
         return response

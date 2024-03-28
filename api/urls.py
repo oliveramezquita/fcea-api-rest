@@ -11,5 +11,6 @@ urlpatterns = [
     path('forgot-password', views.ForgotPasswordView.as_view(),
          name='forgot-password-view'),
     path('reset-password', views.ResetPasswordView.as_view(),
-         name='reset-password-view')
+         name='reset-password-view'),
+    path('encrypt', views.EncryptView.as_view(), name='test-encrypt')
 ]

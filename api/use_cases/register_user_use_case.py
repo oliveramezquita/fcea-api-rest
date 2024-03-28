@@ -41,9 +41,24 @@ class UpdateUserUseCase:
                 "El correo electrónico es incorrecto"
             )
 
+        # validate confirm password
+        if self.user_raw_data['password'] != self.user_raw_data['confirm_password']:
+            raise exceptions.ValidationError(
+                "La contraseña y la confirmación de la contraseña no coinciden"
+            )
+
     def update(self):
+        self.encrypt_passwpord()
+        self.user_raw_data['activated'] = True
+        del self.user_raw_data['confirm_password']
         return update_document(
             'users',
             {'email': self.user_raw_data['email']},
             self.user_raw_data
         )
+
+    def encrypt_passwpord(self):
+        self.user_raw_data['password'] = str(
+            self.user_raw_data['password']).encode('utf-8')
+        self.user_raw_data['password'] = bcrypt.hashpw(
+            self.user_raw_data['password'], bcrypt.gensalt(10))

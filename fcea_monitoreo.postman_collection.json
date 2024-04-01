@@ -94,7 +94,7 @@
 					"name": "Users",
 					"item": [
 						{
-							"name": "Update user",
+							"name": "Register user",
 							"request": {
 								"method": "PATCH",
 								"header": [],
@@ -161,6 +161,24 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get user by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}api/user/660479adb52b6a30f9366291",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"user",
+										"660479adb52b6a30f9366291"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -174,7 +192,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"password\": \"oliver\"\n}",
+									"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"password\": \"Totopotopo24\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"

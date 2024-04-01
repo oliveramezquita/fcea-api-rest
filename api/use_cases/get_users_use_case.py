@@ -1,4 +1,4 @@
-from api.helpers.http_responses import ok_paginated, bad_request
+from api.helpers.http_responses import ok_paginated, error
 from fcea_monitoreo.utils import get_collection
 from api.serializers.user_serializer import UserSerializer
 from urllib.parse import parse_qs
@@ -28,4 +28,4 @@ class GetUsersUseCase:
             )
 
         except Exception as e:
-            return bad_request([e.args])
+            return error(e.args[0])

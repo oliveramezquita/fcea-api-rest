@@ -2,20 +2,21 @@ from rest_framework.views import APIView
 from api.use_cases.save_answers_use_case import SaveAnswersUseCase
 from api.use_cases.test_formsapp_use_case import TestFormsappUseCase
 from api.use_cases.create_user_use_case import CreateUserUseCase
+from api.use_cases.register_user_use_case import RegisterUserUseCase
 from api.use_cases.update_user_use_case import UpdateUserUseCase
 from api.use_cases.login_use_case import LoginUseCase
 from api.use_cases.forgot_password_use_case import ForgotPasswordUseCase
 from api.use_cases.reset_password_use_case import ResetPasswordUseCase
 from api.use_cases.get_users_use_case import GetUsersUseCase
+from api.use_cases.get_user_by_id_use_case import GetUserByIdUseCase
 from django.db.transaction import atomic
 
 
 class AnswersView(APIView):
     def post(self, request):
-        with atomic():
-            answers_use_case = SaveAnswersUseCase(
-                answers_raw_data=request.data)
-            return answers_use_case.execute()
+        answers_use_case = SaveAnswersUseCase(
+            answers_raw_data=request.data)
+        return answers_use_case.execute()
 
 
 class TestDataView(APIView):
@@ -32,18 +33,30 @@ class TestFormsappView(APIView):
 
 class UsersView(APIView):
     def get(self, request):
-        users_use_case = GetUsersUseCase(request)
-        return users_use_case.execute()
+        use_case = GetUsersUseCase(request)
+        return use_case.execute()
 
     def post(self, request):
-        with atomic():
-            user_use_case = CreateUserUseCase(user_raw_data=request.data)
-            return user_use_case.execute()
+        use_case = CreateUserUseCase(user_raw_data=request.data)
+        return use_case.execute()
 
     def patch(self, request):
+        use_case = RegisterUserUseCase(user_raw_data=request.data)
+        return use_case.execute()
+
+
+class UserViewById(APIView):
+    def get(self, request, user_id):
+        use_case = GetUserByIdUseCase(request, user_id)
+        return use_case.execute()
+
+    def patch(self, request, user_id):
         with atomic():
-            user_use_case = UpdateUserUseCase(user_raw_data=request.data)
-            return user_use_case.execute()
+            user_case = UpdateUserUseCase(
+                user_raw_data=request.data,
+                user_id=user_id
+            )
+            return user_case.execute()
 
 
 class LoginView(APIView):

@@ -1,7 +1,29 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework.status import (
-    HTTP_200_OK, HTTP_400_BAD_REQUEST
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR,
 )
+
+
+def build_response(message, data=None):
+    if data is None:
+        payload = {
+            'message': message
+        }
+    else:
+        payload = {
+            'message': message,
+            'data': data
+        }
+    return JsonResponse(payload, safe=False)
+
+
+def build_response_no_message(data):
+    return JsonResponse(data, safe=False)
 
 
 def build_response_with_pagination(paginator, page, data):
@@ -17,7 +39,7 @@ def build_response_with_pagination(paginator, page, data):
 
 
 def ok(data):
-    response = JsonResponse(data, safe=False)
+    response = build_response_no_message(data)
     response.status_code = HTTP_200_OK
     return response
 
@@ -28,7 +50,29 @@ def ok_paginated(paginator, page, data):
     return response
 
 
-def bad_request(message, status_code=HTTP_400_BAD_REQUEST):
+def created(data):
+    response = build_response_no_message(data)
+    response.status_code = HTTP_201_CREATED
+    return response
+
+
+def not_content():
+    return HttpResponse(status=HTTP_204_NO_CONTENT)
+
+
+def bad_request(message):
     response = JsonResponse([message], safe=False)
-    response.status_code = status_code
+    response.status_code = HTTP_400_BAD_REQUEST
+    return response
+
+
+def not_found(message, data=None):
+    response = build_response(message, data)
+    response.status_code = HTTP_404_NOT_FOUND
+    return response
+
+
+def error(message, data=None):
+    response = build_response(message, data)
+    response.status_code = HTTP_500_INTERNAL_SERVER_ERROR
     return response

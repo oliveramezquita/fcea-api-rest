@@ -1,6 +1,6 @@
 from rest_framework import exceptions
 from fcea_monitoreo.utils import insert_document
-from api.helpers.http_responses import ok, bad_request
+from api.helpers.http_responses import created, bad_request
 from bson import ObjectId
 import re
 
@@ -15,7 +15,7 @@ class CreateUserUseCase:
         self.validate_params()
         if self.insert():
             # TODO: Enviar enlace para realizar el registro
-            return ok(['El usuario ha sido creado correctamente'])
+            return created(['El usuario ha sido creado correctamente'])
         return bad_request('El usuario ya existe')
 
     def validate_params(self):

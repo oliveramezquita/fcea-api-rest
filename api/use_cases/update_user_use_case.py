@@ -2,13 +2,14 @@ from api.helpers.http_responses import ok
 from rest_framework import exceptions
 from fcea_monitoreo.utils import update_document
 from api.serializers.user_serializer import UserSerializer
+from bson import ObjectId
 import re
-import bcrypt
 
 
 class UpdateUserUseCase:
-    def __init__(self, user_raw_data):
+    def __init__(self, user_raw_data, user_id):
         self.user_raw_data = user_raw_data
+        self.user_id = user_id
 
     def execute(self):
         self.validate_params()
@@ -16,14 +17,12 @@ class UpdateUserUseCase:
         return ok(UserSerializer(data).data)
 
     def validate_params(self):
+        del self.user_raw_data['_id']
+
         # validate requiere fields
         if 'email' not in self.user_raw_data:
             raise exceptions.ValidationError(
                 "El correo electrónico es obligatorio"
-            )
-        if 'password' not in self.user_raw_data or 'confirm_password' not in self.user_raw_data:
-            raise exceptions.ValidationError(
-                "La contraseña y la confirmación de la contraseña son obligatorios"
             )
         if 'name' not in self.user_raw_data or 'last_name' not in self.user_raw_data:
             raise exceptions.ValidationError(
@@ -44,6 +43,6 @@ class UpdateUserUseCase:
     def update(self):
         return update_document(
             'users',
-            {'email': self.user_raw_data['email']},
+            {'_id': ObjectId(self.user_id)},
             self.user_raw_data
         )

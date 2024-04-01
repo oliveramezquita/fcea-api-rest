@@ -6,7 +6,7 @@ import re
 import bcrypt
 
 
-class UpdateUserUseCase:
+class RegisterUserUseCase:
     def __init__(self, user_raw_data):
         self.user_raw_data = user_raw_data
 

@@ -151,12 +151,34 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}api/users",
+									"raw": "{{URL}}api/users?q&itemsPerPage=10&page=1&sortBy=user&orderBy=asc",
 									"host": [
 										"{{URL}}api"
 									],
 									"path": [
 										"users"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": null
+										},
+										{
+											"key": "itemsPerPage",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "sortBy",
+											"value": "user"
+										},
+										{
+											"key": "orderBy",
+											"value": "asc"
+										}
 									]
 								}
 							},
@@ -175,6 +197,23 @@
 									"path": [
 										"user",
 										"660479adb52b6a30f9366291"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Institutions list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}api/institutions-list",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"institutions-list"
 									]
 								}
 							},

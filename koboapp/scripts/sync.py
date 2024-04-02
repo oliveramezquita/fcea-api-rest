@@ -11,7 +11,6 @@ def sync_projects():
             path='assets.json'
         )
         data = response.json()['results']
-        print(data)
         filtered_data = [
             i for i in data if i['deployment_status'] == 'deployed']
         _insert_projects(filtered_data)

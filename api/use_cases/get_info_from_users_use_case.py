@@ -6,5 +6,4 @@ class GetInfoFromUsersUseCase:
 
     def institutions_list(self):
         data = distinct_collection('users', 'institution')
-        print(data)
         return ok(data)

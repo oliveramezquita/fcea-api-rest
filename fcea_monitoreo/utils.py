@@ -29,7 +29,6 @@ def get_collection(collection, filter, sort_by=None, order_by=None):
     collection_handle = _get_collection_handle(collection)
     data = collection_handle.find(filter)
 
-    print(sort_by)
     if sort_by and order_by:
         if order_by == 'asc':
             data.sort(sort_by, 1)

@@ -58,6 +58,13 @@ class UserViewById(APIView):
             )
             return user_case.execute()
 
+    def delete(self, request, user_id):
+        user_case = UpdateUserUseCase(
+            user_raw_data={'_deleted': True},
+            user_id=user_id
+        )
+        return user_case.delete()
+
 
 class LoginView(APIView):
     def post(self, request):

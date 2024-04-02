@@ -1,4 +1,4 @@
-from api.helpers.http_responses import ok
+from api.helpers.http_responses import ok, error
 from rest_framework import exceptions
 from fcea_monitoreo.utils import update_document
 from api.serializers.user_serializer import UserSerializer
@@ -12,8 +12,11 @@ class RegisterUserUseCase:
 
     def execute(self):
         self.validate_params()
-        data = self.update()
-        return ok(UserSerializer(data).data)
+        try:
+            data = self.update()
+            return ok(UserSerializer(data).data)
+        except Exception as e:
+            return error(e.args[0])
 
     def validate_params(self):
         # validate requiere fields

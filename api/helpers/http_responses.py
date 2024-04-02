@@ -60,9 +60,9 @@ def not_content():
     return HttpResponse(status=HTTP_204_NO_CONTENT)
 
 
-def bad_request(message):
+def bad_request(message, status_code=HTTP_400_BAD_REQUEST):
     response = JsonResponse([message], safe=False)
-    response.status_code = HTTP_400_BAD_REQUEST
+    response.status_code = status_code
     return response
 
 

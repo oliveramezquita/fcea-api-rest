@@ -1,4 +1,4 @@
-from api.helpers.http_responses import ok, bad_request
+from api.helpers.http_responses import ok, error
 
 
 class GetInstitutionsUseCase:
@@ -6,4 +6,4 @@ class GetInstitutionsUseCase:
         try:
             return ok([])
         except Exception as e:
-            return bad_request([e.args])
+            return error(e.args[0])

@@ -10,17 +10,17 @@ class GetUserByIdUseCase:
 
     def execute(self):
         try:
-            users = get_collection('users', {
+            user = get_collection('users', {
                 '_deleted': False,
                 '_id': ObjectId(self.user_id)
             })
 
-            if not users:
+            if not user:
                 return not_found(
                     f"No user found with id {str(self.user_id)}"
                 )
 
-            return ok(UserSerializer(users[0]).data)
+            return ok(UserSerializer(user[0]).data)
 
         except Exception as e:
-            return error([e.args[0]])
+            return error(e.args[0])

@@ -18,10 +18,9 @@ class TestFormsappUseCase:
         return response
 
     def encrypt_test(self, raw_data):
-        key = parse.quote_plus(encrypt(raw_data['email']))
-        print(encrypt(raw_data['email']))
-        print(key)
-        response = JsonResponse([], safe=False)
+        key = parse.quote_plus(encrypt(raw_data['id']))
+
+        response = JsonResponse([key], safe=False)
         response.status_code = HTTP_200_OK
 
         return response

@@ -1,6 +1,6 @@
-from api.helpers.http_responses import ok
+from api.helpers.http_responses import ok, error, not_found
 from rest_framework import exceptions
-from fcea_monitoreo.utils import update_document
+from fcea_monitoreo.utils import update_document, get_collection
 from api.serializers.user_serializer import UserSerializer
 from bson import ObjectId
 import re
@@ -13,8 +13,34 @@ class UpdateUserUseCase:
 
     def execute(self):
         self.validate_params()
-        data = self.update()
-        return ok(UserSerializer(data).data)
+        user = get_collection('users', {
+            '_deleted': False,
+            '_id': ObjectId(self.user_id)
+        })
+        if not user:
+            return not_found(
+                f"No user found with id {str(self.user_id)}"
+            )
+        try:
+            data = self.update()
+            return ok(UserSerializer(data).data)
+        except Exception as e:
+            return error(e.args[0])
+
+    def delete(self):
+        user = get_collection('users', {
+            '_deleted': False,
+            '_id': ObjectId(self.user_id)
+        })
+        if not user:
+            return not_found(
+                f"No user found with id {str(self.user_id)}"
+            )
+        try:
+            self.update()
+            return ok(['Usuario eliminado exitosamente'])
+        except Exception as e:
+            return error(e.args[0])
 
     def validate_params(self):
         del self.user_raw_data['_id']

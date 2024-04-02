@@ -12,6 +12,11 @@ urlpatterns = [
         views.UserViewById.as_view(),
         name='user-view-by-id'
     ),
+    path(
+        'institutions-list',
+        views.InstitutionsListView.as_view(),
+        name="institutions-list-view"
+    ),
     path('login', views.LoginView.as_view(), name="login-view"),
     path('forgot-password', views.ForgotPasswordView.as_view(),
          name='forgot-password-view'),

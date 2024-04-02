@@ -9,6 +9,7 @@ from api.use_cases.forgot_password_use_case import ForgotPasswordUseCase
 from api.use_cases.reset_password_use_case import ResetPasswordUseCase
 from api.use_cases.get_users_use_case import GetUsersUseCase
 from api.use_cases.get_user_by_id_use_case import GetUserByIdUseCase
+from api.use_cases.get_info_from_users_use_case import GetInfoFromUsersUseCase
 from django.db.transaction import atomic
 
 
@@ -59,11 +60,17 @@ class UserViewById(APIView):
             return user_case.execute()
 
     def delete(self, request, user_id):
-        user_case = UpdateUserUseCase(
+        use_case = UpdateUserUseCase(
             user_raw_data={'_deleted': True},
             user_id=user_id
         )
-        return user_case.delete()
+        return use_case.delete()
+
+
+class InstitutionsListView(APIView):
+    def get(self, request):
+        use_case = GetInfoFromUsersUseCase()
+        return use_case.institutions_list()
 
 
 class LoginView(APIView):

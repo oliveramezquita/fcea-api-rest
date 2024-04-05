@@ -28,11 +28,11 @@ class DataProccessUseCase:
     def _insert_site(self, data):
         mapped_data = {}
         mapped_data['_id'] = self.site_id
-        mapped_data['project'] = self._get_project(data.get('cuenca'))
+        mapped_data['project'] = self._get_project(data)
         mapped_data['es_sitio_de_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_de_referencia'] = self._get_sitio_de_referencias(
-            data.get('sitio_de_referencia'))
+            data)
         mapped_data['usuario'] = self._get_user_id(
             data.get('correo_electronico'))
         mapped_data['brigadistas'] = data.get(
@@ -97,18 +97,19 @@ class DataProccessUseCase:
         insert_document('sites', mapped_data, {
                         'nombre_sitio': mapped_data['nombre_sitio']})
 
-    def _get_project(self, project):
-        projects = get_collection('projects', {'name': project})
-        if not projects:
+    def _get_project(self, data):
+        project = get_collection('projects', {'name': data.get('cuenca')})
+        if not project:
             new_project = {
                 '_id': ObjectId(),
-                'name': project,
+                'name': data.get('cuenca'),
+                'temporada': data.get('temporada'),
                 'users': []
             }
             insert_document('projects', new_project, {
                             '_id': new_project['_id']})
             return new_project['_id']
-        return projects[0]['_id']
+        return project[0]['_id']
 
     def _get_user_id(self, email):
         user = get_collection('users', {'email': email})
@@ -116,9 +117,14 @@ class DataProccessUseCase:
             return email
         return user[0]['_id']
 
-    def _get_sitio_de_referencias(self, sitio_de_referencia):
-        nombre_sitio = get_collection(
-            'formsapp_answers', {'nombre_sitio': sitio_de_referencia})
-        if not nombre_sitio:
-            return sitio_de_referencia if sitio_de_referencia != '' else None
-        return nombre_sitio[0]['_id']
+    def _get_sitio_de_referencias(self, data):
+        sitio = get_collection(
+            'sites', {
+                'nombre_sitio': data.get('sitio_de_referencia'),
+                'temporada': data.get('temporada'),
+                'es_sitio_de_referencia': True
+            }
+        )
+        if not sitio:
+            return data.get('sitio_de_referencia') if data.get('sitio_de_referencia') != '' else None
+        return sitio[0]['_id']

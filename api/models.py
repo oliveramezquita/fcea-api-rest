@@ -25,3 +25,4 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     users = models.JSONField(null=True)
     form_link = models.URLField(null=True)
+    temporada = models.CharField(max_length=50)

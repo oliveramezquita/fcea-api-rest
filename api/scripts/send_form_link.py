@@ -5,14 +5,12 @@ from bson import ObjectId
 
 def send_form_link(project):
     # Enlace, Users email, Project name & Referece site
-    if project['users'] and project['link']:
+    if project['users'] and project['form_link']:
         for index, user in enumerate(project['users']):
             if user['status'] == 'SENT':
                 # TODO: Enviar correo
-                project['users'][index]['user_link'] = parse_url(
-                    project, user['_id'])
-                project['users'][index]['status'] = 'PENDING'
-        print(project)
+                project['users'][index] = parse_url(project, user['_id'])
+        return project
 
 
 def parse_url(project, user_id):
@@ -31,14 +29,18 @@ def parse_url(project, user_id):
     params = {}
     params[keys_list[0]] = get_email_from_user(user_id)
     params[keys_list[1]] = project['name']
-    params[keys_list[2]] = reference_site_name(project['_id'])
+    params[keys_list[2]] = reference_site_name(project)
     return {'_id': user_id, 'status': 'PENDING', 'user_link': f"{base_url}#{parse.urlencode(params)}"}
 
 
-def reference_site_name(project_id):
+def reference_site_name(project):
     reference_sites = get_collection(
         'sites',
-        {'project': ObjectId(project_id), 'es_sitio_de_referencia': True}
+        {
+            'project': ObjectId(project['_id']),
+            'temporada': project['temporada'],
+            'es_sitio_de_referencia': True
+        }
     )
     sites_name = []
     for reference_site in reference_sites:

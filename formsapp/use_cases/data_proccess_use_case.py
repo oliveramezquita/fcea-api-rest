@@ -39,9 +39,10 @@ class DataProccessUseCase:
             'nombre_de_las_y_los_integrantes_del_equipo')
         mapped_data['nombre_sitio'] = data.get('nombre_del_sitio')
         mapped_data['codigo_sitio'] = data.get('clave_del_sitio')
-        mapped_data['ubicacion'] = data.get('location')
-        mapped_data['latitud'] = float(data.get('latitude'))
-        mapped_data['longitud'] = float(data.get('longitude'))
+        mapped_data['latitud'] = float(
+            data.get('ubicacion_del_sitio_de_monitoreo/latitud'))
+        mapped_data['longitud'] = float(
+            data.get('ubicacion_del_sitio_de_monitoreo/longitud'))
         mapped_data['altitud'] = float(get_altitude(
             mapped_data['latitud'], mapped_data['longitud']))
         mapped_data['tipo_de_cuerpo_de_agua'] = data.get(

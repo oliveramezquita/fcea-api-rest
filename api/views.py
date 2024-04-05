@@ -10,6 +10,10 @@ from api.use_cases.reset_password_use_case import ResetPasswordUseCase
 from api.use_cases.get_users_use_case import GetUsersUseCase
 from api.use_cases.get_user_by_id_use_case import GetUserByIdUseCase
 from api.use_cases.get_info_from_users_use_case import GetInfoFromUsersUseCase
+from api.use_cases.create_catalog_use_case import CreateCatalogUseCase
+from api.use_cases.get_catalogs_use_case import GetCatalogsUseCase
+from api.use_cases.get_catalog_by_id_use_case import GetCatalogByIdUseCase
+from api.use_cases.update_catalog_use_case import UpdateCatalogUseCase
 from django.db.transaction import atomic
 
 
@@ -24,12 +28,6 @@ class TestDataView(APIView):
     def post(self, request):
         testdata_use_case = SaveAnswersUseCase(answers_raw_data=request.data)
         return testdata_use_case.test_data()
-
-
-class TestFormsappView(APIView):
-    def get(self, request):
-        test_formsapp_use_case = TestFormsappUseCase()
-        return test_formsapp_use_case.mapped_data()
 
 
 class UsersView(APIView):
@@ -71,6 +69,28 @@ class InstitutionsListView(APIView):
     def get(self, request):
         use_case = GetInfoFromUsersUseCase()
         return use_case.institutions_list()
+
+
+class CatalogView(APIView):
+    def post(self, request):
+        catalog_use_case = CreateCatalogUseCase(catalog_raw_data=request.data)
+        return catalog_use_case.execute()
+
+    def get(self, request):
+        catalog_use_case = GetCatalogsUseCase()
+        return catalog_use_case.execute()
+
+
+class CatalogViewById(APIView):
+    def get(self, request, catalog_id):
+        use_case = GetCatalogByIdUseCase(
+            request=request, catalog_id=catalog_id)
+        return use_case.execute()
+
+    def patch(self, request, catalog_id):
+        use_case = UpdateCatalogUseCase(
+            catalog_raw_data=request.data, catalog_id=catalog_id)
+        return use_case.execute()
 
 
 class LoginView(APIView):

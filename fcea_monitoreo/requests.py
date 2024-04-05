@@ -11,3 +11,10 @@ def kobo_request(path):
 
     response = get(url=url, headers=headers)
     return response
+
+
+def google_request(lat, lng):
+    api_key = config('GOOGLE_API_KEY')
+    google_url = "https://maps.googleapis.com/maps/api/elevation/json?locations="
+    url = f'{google_url}{lat},{lng}&key={api_key}'
+    return get(url=url)

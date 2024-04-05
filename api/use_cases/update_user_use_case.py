@@ -43,7 +43,8 @@ class UpdateUserUseCase:
             return error(e.args[0])
 
     def validate_params(self):
-        del self.user_raw_data['_id']
+        if '_id' in self.user_raw_data:
+            del self.user_raw_data['_id']
 
         # validate requiere fields
         if 'email' not in self.user_raw_data:

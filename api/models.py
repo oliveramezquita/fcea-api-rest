@@ -12,3 +12,9 @@ class User(models.Model):
     institution = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
+
+
+class Catalog(models.Model):
+    _id = models.CharField(max_length=50)
+    name = models.CharField(max_length=150, null=True)
+    values = models.JSONField()

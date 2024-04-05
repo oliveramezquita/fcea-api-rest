@@ -25,7 +25,7 @@ def _set_collection(db_handle, collection):
     return db_handle[collection]
 
 
-def get_collection(collection, filter, sort_by=None, order_by=None):
+def get_collection(collection, filter=None, sort_by=None, order_by=None):
     collection_handle = _get_collection_handle(collection)
     data = collection_handle.find(filter)
 
@@ -43,7 +43,7 @@ def distinct_collection(collection, value):
     return list(collection_handle.distinct(value))
 
 
-def insert_document(collection, data, filter):
+def insert_document(collection, data, filter=None):
     collection_handle = _get_collection_handle(collection)
     if collection_handle.find_one(filter):
         return False

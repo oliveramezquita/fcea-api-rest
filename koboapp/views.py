@@ -8,7 +8,7 @@ from koboapp.scripts.sync import sync_projects
 class AllProjectsView(views.APIView):
 
     def get(self, request):
-        projects = get_collection('projects', {})
+        projects = get_collection('projects')
         results = ProjectsSerializer(projects, many=True).data
         return Response(results)
 

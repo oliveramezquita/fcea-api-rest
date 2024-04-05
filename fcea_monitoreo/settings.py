@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'koboapp',
     'api',
+    'formsapp',
     'django_crontab',
     'corsheaders',
 ]

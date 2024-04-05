@@ -167,7 +167,8 @@ def get_macroinvertebrate_score(family):
 def get_macroinvertebrates_average_score(macroinvertebrate_list):
     """Get valid macroinvertebrates"""
     macroinvertebrate_list = list(
-        filter(lambda x: x["puntaje"] is not None, macroinvertebrate_list)
+        filter(lambda x: x["puntaje"] is not None or x["puntaje"]
+               != "ND", macroinvertebrate_list)
     )
     if not macroinvertebrate_list:
         return 4.1

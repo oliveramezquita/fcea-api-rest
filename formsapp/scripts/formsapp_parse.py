@@ -64,11 +64,11 @@ def parse_data(formsapp_data):
                     values.append(i['t'])
                 data[f"{parent}{key_name}"] = values
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['location']:
-            data['location'] = set_location(answer[key_value])
-            if 'l' in answer[key_value]:
-                data['latitude'] = answer[key_value]['l']['lat']
-                data['longitude'] = answer[key_value]['l']['lng']
+        # if questions[answer['q']]['type'] in GROUP_BY_TYPE['location']:
+        #     data['location'] = set_location(answer[key_value])
+        #     if 'l' in answer[key_value]:
+        #         data['latitude'] = answer[key_value]['l']['lat']
+        #         data['longitude'] = answer[key_value]['l']['lng']
 
         if questions[answer['q']]['type'] in GROUP_BY_TYPE['grid']:
             data = data | set_grid(clean_text(key_name), answer[key_value])

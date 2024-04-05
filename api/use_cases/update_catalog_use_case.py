@@ -29,12 +29,6 @@ class UpdateCatalogUseCase:
         if '_id' in self.catalog_raw_data:
             del self.catalog_raw_data['_id']
 
-        # validate requiere fields
-        if 'name' not in self.catalog_raw_data:
-            raise exceptions.ValidationError(
-                "El nombre del catálogo es obligatorio"
-            )
-
         if 'values' not in self.catalog_raw_data:
             raise exceptions.ValidationError(
                 "Debes agregar al menos un valor al catálogo"

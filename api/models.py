@@ -18,3 +18,10 @@ class Catalog(models.Model):
     _id = models.CharField(max_length=50)
     name = models.CharField(max_length=150, null=True)
     values = models.JSONField()
+
+
+class Project(models.Model):
+    _id = models.CharField(max_length=50)
+    name = models.CharField(max_length=255)
+    users = models.JSONField(null=True)
+    form_link = models.URLField(null=True)

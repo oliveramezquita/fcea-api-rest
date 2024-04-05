@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
-from api.use_cases.save_answers_use_case import SaveAnswersUseCase
-from api.use_cases.test_formsapp_use_case import TestFormsappUseCase
+from api.use_cases.test_data_use_case import TestDataUseCase
 from api.use_cases.create_user_use_case import CreateUserUseCase
 from api.use_cases.register_user_use_case import RegisterUserUseCase
 from api.use_cases.update_user_use_case import UpdateUserUseCase
@@ -14,20 +13,10 @@ from api.use_cases.create_catalog_use_case import CreateCatalogUseCase
 from api.use_cases.get_catalogs_use_case import GetCatalogsUseCase
 from api.use_cases.get_catalog_by_id_use_case import GetCatalogByIdUseCase
 from api.use_cases.update_catalog_use_case import UpdateCatalogUseCase
+from api.use_cases.get_projects_use_case import GetProjectsUseCase
+from api.use_cases.get_project_by_id_use_case import GetProjectByIdUseCase
+from api.use_cases.update_project_use_case import UpdateProjectUseCase
 from django.db.transaction import atomic
-
-
-class AnswersView(APIView):
-    def post(self, request):
-        answers_use_case = SaveAnswersUseCase(
-            answers_raw_data=request.data)
-        return answers_use_case.execute()
-
-
-class TestDataView(APIView):
-    def post(self, request):
-        testdata_use_case = SaveAnswersUseCase(answers_raw_data=request.data)
-        return testdata_use_case.test_data()
 
 
 class UsersView(APIView):
@@ -93,6 +82,24 @@ class CatalogViewById(APIView):
         return use_case.execute()
 
 
+class ProjectView(APIView):
+    def get(self, request):
+        use_case = GetProjectsUseCase()
+        return use_case.execute()
+
+
+class ProjectViewById(APIView):
+    def get(self, request, project_id):
+        use_case = GetProjectByIdUseCase(
+            request=request, project_id=project_id)
+        return use_case.execute()
+
+    def patch(self, request, project_id):
+        use_case = UpdateProjectUseCase(
+            project_raw_data=request.data, project_id=project_id)
+        return use_case.execute()
+
+
 class LoginView(APIView):
     def post(self, request):
         login_use_case = LoginUseCase(login_raw_data=request.data)
@@ -111,7 +118,13 @@ class ResetPasswordView(APIView):
         return reset_password_use_case.execute()
 
 
+class TestDataView(APIView):
+    def post(self, request):
+        testdata_use_case = TestDataUseCase(raw_data=request.data)
+        return testdata_use_case.test_data()
+
+
 class EncryptView(APIView):
     def post(self, request):
-        test = TestFormsappUseCase()
+        test = TestDataUseCase(raw_data=request.data)
         return test.encrypt_test(raw_data=request.data)

@@ -15,20 +15,20 @@ class DataProccessUseCase:
     def proccess(self):
         data = parse_data(self.raw_data)
         try:
-            self.insert_formsapp_raw_data(self.raw_data)
+            self._insert_formsapp_raw_data(self.raw_data)
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
             return error(e.args[0])
 
-    def insert_formsapp_raw_data(self, data):
+    def _insert_formsapp_raw_data(self, data):
         data['_id'] = self.site_id
-        insert_document('formsapp_raw_data', data)
+        insert_document('formsapp_raw_data', data, {'_id': self.site_id})
 
     def _insert_site(self, data):
         mapped_data = {}
         mapped_data['_id'] = self.site_id
-        mapped_data['cuenca'] = data.get('cuenca')
+        mapped_data['project'] = self._get_project(data.get('cuenca'))
         mapped_data['es_sitio_de_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_de_referencia'] = self._get_sitio_de_referencias(
@@ -97,6 +97,19 @@ class DataProccessUseCase:
         insert_document('sites', mapped_data, {
                         'nombre_sitio': mapped_data['nombre_sitio']})
 
+    def _get_project(self, project):
+        projects = get_collection('projects', {'name': project})
+        if not projects:
+            new_project = {
+                '_id': ObjectId(),
+                'name': project,
+                'users': []
+            }
+            insert_document('projects', new_project, {
+                            '_id': new_project['_id']})
+            return new_project['_id']
+        return projects[0]['_id']
+
     def _get_user_id(self, email):
         user = get_collection('users', {'email': email})
         if not user:
@@ -107,5 +120,5 @@ class DataProccessUseCase:
         nombre_sitio = get_collection(
             'formsapp_answers', {'nombre_sitio': sitio_de_referencia})
         if not nombre_sitio:
-            return sitio_de_referencia
+            return sitio_de_referencia if sitio_de_referencia != '' else None
         return nombre_sitio[0]['_id']

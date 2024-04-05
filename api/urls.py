@@ -3,19 +3,10 @@ from api import views
 
 
 urlpatterns = [
-    path('answers', views.AnswersView.as_view(), name="answers-view"),
-    path('test-data', views.TestDataView.as_view(), name="test-data"),
     path('users', views.UsersView.as_view(), name="users-view"),
-    path(
-        'user/<str:user_id>',
-        views.UserViewById.as_view(),
-        name='user-view-by-id'
-    ),
-    path(
-        'institutions-list',
-        views.InstitutionsListView.as_view(),
-        name="institutions-list-view"
-    ),
+    path('user/<str:user_id>', views.UserViewById.as_view(), name='user-view-by-id'),
+    path('institutions-list', views.InstitutionsListView.as_view(),
+         name="institutions-list-view"),
     path('catalog', views.CatalogView.as_view(), name="catalog_view"),
     path('catalog/<str:catalog_id>',
          views.CatalogViewById.as_view(), name="catalog-view-by-id"),
@@ -24,5 +15,9 @@ urlpatterns = [
          name='forgot-password-view'),
     path('reset-password', views.ResetPasswordView.as_view(),
          name='reset-password-view'),
+    path('projects', views.ProjectView.as_view(), name="projects-view"),
+    path('project/<str:project_id>',
+         views.ProjectViewById.as_view(), name="project-view-by-id"),
+    path('test-data', views.TestDataView.as_view(), name="test-data"),
     path('encrypt', views.EncryptView.as_view(), name='test-encrypt')
 ]

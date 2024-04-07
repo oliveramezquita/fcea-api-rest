@@ -71,8 +71,11 @@ def parse_data(formsapp_data):
         #         data['longitude'] = answer[key_value]['l']['lng']
 
         if questions[answer['q']]['type'] in GROUP_BY_TYPE['grid']:
+            d = data.copy()
             grid = set_grid(clean_text(key_name), answer[key_value])
-            data = {**data, **grid}
+            # data = {**data, **grid}
+            d.update(grid)
+            data = d
 
     return data
 

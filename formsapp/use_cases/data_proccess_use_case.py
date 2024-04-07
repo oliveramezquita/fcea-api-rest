@@ -10,7 +10,7 @@ from dateutil import parser
 class DataProccessUseCase:
     def __init__(self, raw_data):
         self.raw_data = raw_data
-        self.site_id = ObjectId()
+        self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
         data = parse_data(self.raw_data)

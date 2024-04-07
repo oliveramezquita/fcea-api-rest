@@ -113,7 +113,13 @@ class DataProccessUseCase:
         return project[0]['_id']
 
     def _get_user_id(self, email):
-        user = get_collection('users', {'email': email})
+        user = get_collection(
+            'users',
+            {
+                'email': email,
+                'activated': True
+            }
+        )
         if not user:
             return email
         return user[0]['_id']

@@ -127,4 +127,22 @@ class TestDataView(APIView):
 class EncryptView(APIView):
     def post(self, request):
         test = TestDataUseCase(raw_data=request.data)
-        return test.encrypt_test(raw_data=request.data)
+        return test.encrypt_test()
+
+
+class TestEmailFormView(APIView):
+    def post(self, request):
+        test = TestDataUseCase(raw_data=request.data)
+        return test.test_email_form()
+
+
+class TestEmailRegisterView(APIView):
+    def post(self, request):
+        test = TestDataUseCase(raw_data=request.data)
+        return test.test_email_register()
+
+
+class TestEmailResetPasswordView(APIView):
+    def post(self, request):
+        test = TestDataUseCase(raw_data=request.data)
+        return test.test_email_reset_password()

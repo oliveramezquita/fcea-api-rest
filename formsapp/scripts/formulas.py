@@ -158,6 +158,7 @@ def get_macroinvertabrates(data):
 
 def get_macroinvertebrate_score(family):
     """Get the macroinvertebrate score"""
+    # TODO: Revisar valores vacíos
     macroinvertebrate_scores = get_catalog_of_macroinvertebrate_scores()
     if family.lower() in macroinvertebrate_scores.keys():
         return macroinvertebrate_scores[family.lower()]

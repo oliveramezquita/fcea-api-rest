@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'formsapp',
     'django_crontab',
     'corsheaders',
+    'mail_templated',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,9 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     profiles_sample_rate=1.0,
 )
+
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')

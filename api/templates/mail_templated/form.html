@@ -1,0 +1,66 @@
+{% extends "mail_templated/base.html" %}
+
+{% block subject_appendix %}{{ subject }}{% endblock %}
+
+{% block html_image %}https://calidadagua.mx/wp-content/uploads/2024/04/email-img-newsite.png{% endblock %}
+
+{% block html_title %}Formato de campo digital{% endblock %}
+
+{% block html_content %}
+<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%"
+    border="0">
+    <tbody>
+        <tr>
+            <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;"
+                align="left">
+
+                <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
+                    <p style="font-size: 14px; line-height: 140%;"><span
+                            style="font-size: 18px; line-height: 25.2px; color: #666666;">Hola
+                            <strong>{{ user_name }}</strong>,</span>
+                    </p>
+                    <p style="font-size: 14px; line-height: 140%;"> </p>
+                    <p style="font-size: 14px; line-height: 140%;">
+                        <span style="font-size: 18px; line-height: 25.2px; color: #666666;">Se te ha asignado un formato
+                            de campo digital para el registro de los resultados del monitoreo comunitario del agua:
+                        </span>
+                        <span style="font-size: 18px; line-height: 25.2px; color: #666666; font-weight: bold;">
+                            {{project }}
+                        </span>
+                    </p>
+                    <p style="font-size: 14px; line-height: 140%;"> </p>
+                    <p style="font-size: 14px; line-height: 140%;">
+                        <span style="font-size: 18px; line-height: 25.2px; color: #666666;">Da click en el siguiente
+                            botón para ver formato: </span>
+                    </p>
+                </div>
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%"
+    border="0">
+    <tbody>
+        <tr>
+            <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 40px;font-family:'Lato',sans-serif;"
+                align="left">
+
+                <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
+                <div align="left">
+                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:52px; v-text-anchor:middle; width:214px;" arcsize="2%"  stroke="f" fillcolor="#1c92b8"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
+                    <a href="{{ link_href }}" target="_blank" class="v-button"
+                        style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #1c92b8; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
+                        <span style="display:block;padding:15px 40px;line-height:120%;">
+                            <span style="font-size: 18px; line-height: 21.6px;">Formato de campo digital</span>
+                        </span>
+                    </a>
+                    <!--[if mso]></center></v:roundrect><![endif]-->
+                </div>
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

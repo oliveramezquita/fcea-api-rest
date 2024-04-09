@@ -2,6 +2,9 @@ from rest_framework import exceptions
 from fcea_monitoreo.utils import insert_document
 from api.helpers.http_responses import created, bad_request, error
 from bson import ObjectId
+from urllib import parse
+from fcea_monitoreo.settings import ADMIN_URL
+from fcea_monitoreo.functions import encrypt, send_email
 import re
 
 
@@ -15,7 +18,7 @@ class CreateUserUseCase:
         self.validate_params()
         if self.insert():
             try:
-                # TODO: Enviar enlace para realizar el registro
+                self.send_link()
                 return created(['El usuario ha sido creado correctamente'])
             except Exception as e:
                 return error(e.args[0])
@@ -54,5 +57,17 @@ class CreateUserUseCase:
             self.user_raw_data,
             {
                 'email': self.user_raw_data['email'],
-                '_deleted': False
+                '_deleted': False,
             })
+
+    def send_link(self):
+        key = parse.quote_plus(encrypt(str(self.user_raw_data['_id'])))
+        link = f"{ADMIN_URL}register?rt={key}"
+        send_email(
+            template="mail_templated/register.html",
+            context={
+                'subject': 'Invitación para el registro del monitoreo de la calidad del agua',
+                'email': self.user_raw_data['email'],
+                'link_href': link,
+            },
+        )

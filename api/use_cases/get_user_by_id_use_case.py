@@ -17,7 +17,7 @@ class GetUserByIdUseCase:
 
             if not user:
                 return not_found(
-                    f"No user found with id {str(self.user_id)}"
+                    f"Usuario no encontrado con el id: {str(self.user_id)}"
                 )
 
             return ok(UserSerializer(user[0]).data)

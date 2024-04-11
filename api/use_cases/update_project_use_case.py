@@ -10,7 +10,7 @@ class UpdateProjectUseCase:
         self.project_raw_data = project_raw_data
         self.project_id = project_id
 
-    def execute(self):
+    def assign_project(self):
         project = get_collection('projects', {
             '_id': ObjectId(self.project_id)
         })
@@ -22,6 +22,24 @@ class UpdateProjectUseCase:
             self.project_raw_data = self.match_projects(project[0])
             data = send_form_link(self.project_raw_data)
             self.update(data)
+            return ok(ProjectSerializer(data).data)
+        except Exception as e:
+            return error(e.args[0])
+
+    def execute(self):
+        project = get_collection('projects', {
+            '_id': ObjectId(self.project_id)
+        })
+        if not project:
+            return not_found(
+                f"No project found with id {str(self.project_id)}"
+            )
+        try:
+            if '_id' not in self.project_raw_data:
+                self.project_raw_data['_id'] = project[0]['_id']
+            if 'temporada' not in self.project_raw_data:
+                self.project_raw_data['temporada'] = project[0]['temporada']
+            data = self.update(self.project_raw_data)
             return ok(ProjectSerializer(data).data)
         except Exception as e:
             return error(e.args[0])

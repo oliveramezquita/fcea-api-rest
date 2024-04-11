@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from fcea_monitoreo.functions import encrypt
 from urllib import parse
 from fcea_monitoreo.functions import send_email
+from fcea_monitoreo.utils import get_collection
 
 
 class TestDataUseCase:

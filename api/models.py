@@ -4,14 +4,14 @@ from django.db import models
 class User(models.Model):
     _id = models.CharField(max_length=50)
     role = models.CharField(max_length=10)
-    email = models.CharField(max_length=255)
-    activated = models.BooleanField()
     name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=150, null=True)
+    email = models.CharField(max_length=255)
     phone = models.CharField(max_length=25, null=True)
     institution = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=50, blank=True, null=True)
+    activated = models.BooleanField()
 
 
 class Catalog(models.Model):
@@ -23,6 +23,7 @@ class Catalog(models.Model):
 class Project(models.Model):
     _id = models.CharField(max_length=50)
     name = models.CharField(max_length=255)
-    users = models.JSONField(null=True)
-    form_link = models.URLField(null=True)
-    temporada = models.CharField(max_length=50)
+    season = models.CharField(max_length=50)
+    activated = models.BooleanField()
+    rfs_data = models.JSONField(null=True)
+    its_data = models.JSONField(null=True)

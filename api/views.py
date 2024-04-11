@@ -16,6 +16,8 @@ from api.use_cases.update_catalog_use_case import UpdateCatalogUseCase
 from api.use_cases.get_projects_use_case import GetProjectsUseCase
 from api.use_cases.get_project_by_id_use_case import GetProjectByIdUseCase
 from api.use_cases.update_project_use_case import UpdateProjectUseCase
+from api.use_cases.create_project_use_case import CreateProjectUseCase
+from api.use_cases.assign_project_use_case import AssignProjectUseCase
 from django.db.transaction import atomic
 
 
@@ -25,12 +27,9 @@ class UsersView(APIView):
         return use_case.execute()
 
     def post(self, request):
-        use_case = CreateUserUseCase(user_raw_data=request.data)
-        return use_case.execute()
-
-    def patch(self, request):
-        use_case = RegisterUserUseCase(user_raw_data=request.data)
-        return use_case.execute()
+        with atomic():
+            use_case = CreateUserUseCase(request.data)
+            return use_case.execute()
 
 
 class UserViewById(APIView):
@@ -38,12 +37,14 @@ class UserViewById(APIView):
         use_case = GetUserByIdUseCase(request, user_id)
         return use_case.execute()
 
+    def put(self, request, user_id):
+        with atomic():
+            use_case = RegisterUserUseCase(request.data, user_id)
+            return use_case.execute()
+
     def patch(self, request, user_id):
         with atomic():
-            user_case = UpdateUserUseCase(
-                user_raw_data=request.data,
-                user_id=user_id
-            )
+            user_case = UpdateUserUseCase(request.data, user_id)
             return user_case.execute()
 
     def delete(self, request, user_id):
@@ -82,9 +83,13 @@ class CatalogViewById(APIView):
         return use_case.execute()
 
 
-class ProjectView(APIView):
+class ProjectsView(APIView):
     def get(self, request):
         use_case = GetProjectsUseCase()
+        return use_case.execute()
+
+    def post(self, request):
+        use_case = CreateProjectUseCase(request.data)
         return use_case.execute()
 
 
@@ -92,6 +97,10 @@ class ProjectViewById(APIView):
     def get(self, request, project_id):
         use_case = GetProjectByIdUseCase(
             request=request, project_id=project_id)
+        return use_case.execute()
+
+    def put(self, request, project_id):
+        use_case = AssignProjectUseCase(request.data, project_id)
         return use_case.execute()
 
     def patch(self, request, project_id):

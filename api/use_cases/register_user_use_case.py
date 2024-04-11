@@ -1,17 +1,27 @@
-from api.helpers.http_responses import ok, error
+from api.helpers.http_responses import ok, error, not_found
 from rest_framework import exceptions
-from fcea_monitoreo.utils import update_document
+from fcea_monitoreo.utils import update_document, get_collection
 from api.serializers.user_serializer import UserSerializer
+from bson import ObjectId
 import re
 import bcrypt
 
 
 class RegisterUserUseCase:
-    def __init__(self, user_raw_data):
+    def __init__(self, user_raw_data, user_id):
         self.user_raw_data = user_raw_data
+        self.user_id = user_id
 
     def execute(self):
         self.validate_params()
+        user = get_collection('users', {
+            '_deleted': False,
+            '_id': ObjectId(self.user_id)
+        })
+        if not user:
+            return not_found(
+                f"Usuario no encontrado con el id: {str(self.user_id)}"
+            )
         try:
             data = self.update()
             return ok(UserSerializer(data).data)
@@ -50,13 +60,15 @@ class RegisterUserUseCase:
                 "La contraseña y la confirmación de la contraseña no coinciden"
             )
 
-    def update(self):
+        # set default values
         self.encrypt_passwpord()
         self.user_raw_data['activated'] = True
         del self.user_raw_data['confirm_password']
+
+    def update(self):
         return update_document(
             'users',
-            {'email': self.user_raw_data['email']},
+            {'_id': ObjectId(self.user_id)},
             self.user_raw_data
         )
 

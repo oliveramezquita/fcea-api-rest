@@ -8,7 +8,8 @@ class GetProjectsUseCase:
         try:
             projects = get_collection('projects')
             if len(projects) > 0:
+                print(projects)
                 return ok(ProjectSerializer(projects, many=True).data)
-            return not_found('No se han registrado datos para extraer las cuencas')
+            return ok([])
         except Exception as e:
             return error(e.args[0])

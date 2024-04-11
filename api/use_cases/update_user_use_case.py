@@ -19,7 +19,7 @@ class UpdateUserUseCase:
         })
         if not user:
             return not_found(
-                f"No user found with id {str(self.user_id)}"
+                f"Usuario no encontrado con el id: {str(self.user_id)}"
             )
         try:
             data = self.update()
@@ -34,7 +34,7 @@ class UpdateUserUseCase:
         })
         if not user:
             return not_found(
-                f"No user found with id {str(self.user_id)}"
+                f"Usuario no encontrado con el id: {str(self.user_id)}"
             )
         try:
             self.update()
@@ -43,29 +43,20 @@ class UpdateUserUseCase:
             return error(e.args[0])
 
     def validate_params(self):
-        if '_id' in self.user_raw_data:
-            del self.user_raw_data['_id']
-
-        # validate requiere fields
-        if 'email' not in self.user_raw_data:
-            raise exceptions.ValidationError(
-                "El correo electrónico es obligatorio"
-            )
-        if 'name' not in self.user_raw_data or 'last_name' not in self.user_raw_data:
-            raise exceptions.ValidationError(
-                "El nombre y los apellidos son obligatorios"
-            )
-        if 'phone' not in self.user_raw_data:
-            raise exceptions.ValidationError(
-                "El télefono es obligatorio"
-            )
-
         # validate email
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        if not re.fullmatch(regex, self.user_raw_data['email']):
+        if 'email' in self.user_raw_data and not re.fullmatch(regex, self.user_raw_data['email']):
             raise exceptions.ValidationError(
                 "El correo electrónico es incorrecto"
             )
+
+        # set default values
+        if '_id' in self.user_raw_data:
+            del self.user_raw_data['_id']
+        if 'short_name' in self.user_raw_data:
+            del self.user_raw_data['short_name']
+        if 'full_name' in self.user_raw_data:
+            del self.user_raw_data['full_name']
 
     def update(self):
         return update_document(

@@ -4,6 +4,7 @@ QUESTION_TYPE = [
     "address",
     "number",
     "imageupload",
+    'fileupload',
     "date",
     "text",
     "email",
@@ -35,7 +36,7 @@ STRING_TO_REPLACE = {
 IGNORE_KEYS = ['q', 'f']
 GROUP_BY_TYPE = {
     "text": ["text", "date", "number", "email"],
-    "image": ["imageupload"],
+    "image": ["imageupload", "fileupload"],
     "select": ["choice"],
     "macroinvertebrate": ["macroinvertebrate"],
     "location": ["address"],

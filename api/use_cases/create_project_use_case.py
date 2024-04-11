@@ -33,7 +33,7 @@ class CreateProjectUseCase:
             )
 
         # validate rol
-        seasons = ['Secas', 'Luvias']
+        seasons = ['Secas', 'Lluvias']
         if self.project_raw_data['season'] not in seasons:
             raise exceptions.ValidationError(
                 "La temporada es incorrecta"

@@ -61,18 +61,21 @@ def format_date(datetime_str):
     return datetime.strptime(datetime_str, '%Y-%m-%d')
 
 
-def get_tipo_cuerpo_de_agua(data):
-    """Get tipo de cuerpo de agua"""
-    tipo = data.get("datos_generales/Tipo_de_cuerpo", "")
-    mapper = {
-        "Rio_o_arroyo": "Manantiales, ríos y arroyos",
-        "Manantial": "Manantiales, ríos y arroyos",
-        "Lago_o_laguna": "Lagos y lagunas",
-        "preson": "Presón",
-    }
-    if tipo in mapper.keys():
-        return mapper[tipo]
-    return tipo
+def get_tipo_cuerpo_de_agua(data, key):
+    # """Get tipo de cuerpo de agua"""
+    # tipo = data.get("datos_generales/Tipo_de_cuerpo", "")
+    # mapper = {
+    #     "Rio_o_arroyo": "Manantiales, ríos y arroyos",
+    #     "Manantial": "Manantiales, ríos y arroyos",
+    #     "Lago_o_laguna": "Lagos y lagunas",
+    #     "preson": "Presón",
+    # }
+    # if tipo in mapper.keys():
+    #     return mapper[tipo]
+    # return tipo
+    list_tipo_cuerpo_agua = get_collection(
+        'catalogs', {'name': 'Tipo de cuerpos de agua'})
+    return list_tipo_cuerpo_agua[0]['values'][data.get(key)]
 
 
 def get_saturation(dissolved_oxygen, elevation, temperature):
@@ -139,9 +142,7 @@ def get_macroinvertabrates(data):
         families = data.get(group)
         if not families or not isinstance(families, str):
             continue
-        if families in ["s_", "no"]:
-            continue
-        families = families.split(" ")
+        families = families.strip().split(" ")
         for family in families:
             try:
                 score = get_macroinvertebrate_score(family)
@@ -158,7 +159,6 @@ def get_macroinvertabrates(data):
 
 def get_macroinvertebrate_score(family):
     """Get the macroinvertebrate score"""
-    # TODO: Revisar valores vacíos
     macroinvertebrate_scores = get_catalog_of_macroinvertebrate_scores()
     if family.lower() in macroinvertebrate_scores.keys():
         return macroinvertebrate_scores[family.lower()]
@@ -177,8 +177,8 @@ def get_macroinvertebrates_average_score(macroinvertebrate_list):
     if not macroinvertebrate_list:
         return 4.1
     return round(
-        sum([x["puntaje"] for x in macroinvertebrate_list])
-        / len(macroinvertebrate_list),
+        sum([x["puntaje"] for x in macroinvertebrate_list]) /
+        len(macroinvertebrate_list),
         2,
     )
 

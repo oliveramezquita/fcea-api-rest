@@ -11,9 +11,10 @@ class AssignProjectUseCase:
         self.project_raw_data = project_raw_data
         self.project_id = project_id
         self.site_type = project_raw_data['site_type']
+        self.new_users = []
 
     def execute(self):
-        # self.validate_params()
+        self.validate_params()
         project = get_collection('projects', {
             '_id': ObjectId(self.project_id)
         })
@@ -23,8 +24,8 @@ class AssignProjectUseCase:
             )
         try:
             data = self.match_projects(project[0])
-            data[self.site_type]['users_url_form'] = send_form_link(
-                data, self.site_type)
+            data[self.site_type]['users_url_form'] = self.create_users_url_form(
+                data)
             updated_project = self.update(data)
             return ok(ProjectSerializer(updated_project).data)
         except Exception as e:
@@ -32,11 +33,6 @@ class AssignProjectUseCase:
 
     def validate_params(self):
         # validate requiere fields
-        if 'site_type' not in self.project_raw_data:
-            raise exceptions.ValidationError(
-                "El tipo de sitio es obligatorio"
-            )
-
         if 'url_form' not in self.project_raw_data[self.site_type]:
             raise exceptions.ValidationError(
                 "La URL de forms.app es obligatoria"
@@ -49,7 +45,15 @@ class AssignProjectUseCase:
 
     def match_projects(self, project):
         project[self.site_type]['url_form'] = self.project_raw_data[self.site_type]['url_form']
+
+        if 'users' in project[self.site_type] and len(project[self.site_type]['users']) > 0:
+            s = set(project[self.site_type]['users'])
+            self.new_users = [
+                x for x in self.project_raw_data[self.site_type]['users'] if x not in s]
+        else:
+            self.new_users = self.project_raw_data[self.site_type]['users']
         project[self.site_type]['users'] = self.project_raw_data[self.site_type]['users']
+
         return project
 
     def update(self, project):
@@ -60,3 +64,13 @@ class AssignProjectUseCase:
             {'_id': ObjectId(self.project_id)},
             project
         )
+
+    def create_users_url_form(self, project):
+        users_url_form = project[self.site_type]['users_url_form'] if 'users_url_form' in project[self.site_type] else [
+        ]
+        for user in self.new_users:
+            new_users_url_form = {}
+            new_users_url_form[user] = send_form_link(
+                project, self.site_type, user)
+            users_url_form.append(new_users_url_form)
+        return users_url_form

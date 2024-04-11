@@ -1,10 +1,11 @@
 from formsapp.scripts.formsapp_parse import parse_data
 from api.helpers.http_responses import created, error
 from formsapp.scripts import formulas
-from fcea_monitoreo.utils import get_collection, insert_document
+from fcea_monitoreo.utils import get_collection, insert_document, update_document
 from fcea_monitoreo.functions import get_altitude
 from bson import ObjectId
 from dateutil import parser
+import json
 
 
 class DataProccessUseCase:
@@ -13,9 +14,9 @@ class DataProccessUseCase:
         self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
+        self._insert_formsapp_raw_data(self.raw_data)
         data = parse_data(self.raw_data)
         try:
-            self._insert_formsapp_raw_data(self.raw_data)
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
@@ -26,14 +27,16 @@ class DataProccessUseCase:
         insert_document('formsapp_raw_data', data, {'_id': self.site_id})
 
     def _insert_site(self, data):
+        project = self._get_project(data)
         mapped_data = {}
         mapped_data['_id'] = self.site_id
-        mapped_data['project'] = self._get_project(data)
-        mapped_data['es_sitio_de_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
+        mapped_data['project_id'] = project['_id'] if project else data.get(
+            'cuenca')
+        mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
-        mapped_data['sitio_de_referencia'] = self._get_sitio_de_referencias(
+        mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
             data)
-        mapped_data['usuario'] = self._get_user_id(
+        mapped_data['user_id'] = self._get_user_id(
             data.get('correo_electronico'))
         mapped_data['brigadistas'] = data.get(
             'nombre_de_las_y_los_integrantes_del_equipo')
@@ -45,8 +48,8 @@ class DataProccessUseCase:
             data.get('ubicacion_del_sitio_de_monitoreo/longitud'))
         mapped_data['altitud'] = float(get_altitude(
             mapped_data['latitud'], mapped_data['longitud']))
-        mapped_data['tipo_de_cuerpo_de_agua'] = data.get(
-            'selecciona_el_tipo_de_cuerpo_de_agua')
+        mapped_data['tipo_cuerpo_agua'] = formulas.get_tipo_cuerpo_de_agua(
+            data, 'selecciona_el_tipo_de_cuerpo_de_agua')
         mapped_data['fecha'] = parser.isoparse(data.get('fecha_del_monitoreo'))
         mapped_data['temporada'] = data.get('temporada')
         mapped_data['fotografia1'] = data.get(
@@ -58,7 +61,7 @@ class DataProccessUseCase:
         mapped_data['amonio'] = formulas.float_pfq(data, 'nitrogeno_amoniacal')
         mapped_data['ortofosfatos'] = formulas.float_pfq(
             data, 'ortofosfatos')
-        mapped_data['temperatura_del_agua'] = formulas.float_pfq(
+        mapped_data['temperatura_agua'] = formulas.float_pfq(
             data, 'temperatura_del_agua')
         mapped_data['temperatura_ambiental'] = formulas.float_pfq(
             data, 'temperatura_ambiental')
@@ -67,7 +70,7 @@ class DataProccessUseCase:
         mapped_data['saturacion'] = formulas.get_saturation(
             mapped_data['oxigeno_disuelto'],
             mapped_data['altitud'],
-            mapped_data['temperatura_del_agua']
+            mapped_data['temperatura_agua']
         )
         mapped_data['turbidez'] = formulas.float_pfq(data, 'turbidez')
         mapped_data['nitratos'] = formulas.float_pfq(
@@ -81,7 +84,7 @@ class DataProccessUseCase:
         mapped_data['calificacion_macroinvertebrados'] = formulas.get_macroinvertebrates_average_score(
             mapped_data['macroinvertebrados'])
         mapped_data['calidad_hidromorfologica'] = formulas.get_ch(data)
-        mapped_data['calidad_de_bosque_de_ribera'] = formulas.get_qbr(data)
+        mapped_data['calidad_bosque_ribera'] = formulas.get_qbr(data)
         mapped_data['secciones'] = formulas.get_sections(data)
         mapped_data['ancho_cauce'] = formulas.custom_float(
             data, "caudal/ancho_total_del_cauce")
@@ -95,22 +98,16 @@ class DataProccessUseCase:
             data, 'informacion_adicional/requieres_apoyo_para_identificar_y_clasificar_un_macroinvertebrado')
         mapped_data['archivos_adjuntos'] = data.get(
             'informacion_adicional/sube_tus_imagenes_aqui', [])
+        mapped_data['create_date'] = parser.isoparse(
+            self.raw_data['answer']['createDate'])
         insert_document('sites', mapped_data, {
-                        'nombre_sitio': mapped_data['nombre_sitio']})
+            'nombre_sitio': mapped_data['nombre_sitio']})
 
     def _get_project(self, data):
         project = get_collection('projects', {'name': data.get('cuenca')})
         if not project:
-            new_project = {
-                '_id': ObjectId(),
-                'name': data.get('cuenca'),
-                'temporada': data.get('temporada'),
-                'users': []
-            }
-            insert_document('projects', new_project, {
-                            '_id': new_project['_id']})
-            return new_project['_id']
-        return project[0]['_id']
+            return None
+        return project[0]
 
     def _get_user_id(self, email):
         user = get_collection(
@@ -129,7 +126,7 @@ class DataProccessUseCase:
             'sites', {
                 'nombre_sitio': data.get('sitio_de_referencia'),
                 'temporada': data.get('temporada'),
-                'es_sitio_de_referencia': True
+                'es_sitio_referencia': True
             }
         )
         if not sitio:

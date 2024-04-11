@@ -25,5 +25,3 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     season = models.CharField(max_length=50)
     activated = models.BooleanField()
-    rfs_data = models.JSONField(null=True)
-    its_data = models.JSONField(null=True)

@@ -4,8 +4,8 @@ from urllib import parse
 from bson import ObjectId
 
 
-def send_form_link(project, site_type):
-    user = get_email_from_user(project[site_type]['users'])
+def send_form_link(project, site_type, user_id):
+    user = get_email_from_user(user_id)
     url_form = parse_url(project, user['email'], site_type)
     send_email(
         template="mail_templated/form.html",
@@ -34,9 +34,10 @@ def parse_url(project, email, site_type):
     keys_list = list(second_step.keys())
 
     params = {}
-    if isinstance(project[site_type]['users'], str):
-        params[keys_list[0]] = email
+    params[keys_list[0]] = email
     params[keys_list[1]] = project['name']
+    if site_type == 'its_data':
+        params[keys_list[2]] = reference_site_name(project)
 
     return f"{base_url}#{parse.urlencode(params, quote_via=parse.quote)}"
 
@@ -45,9 +46,9 @@ def reference_site_name(project):
     reference_sites = get_collection(
         'sites',
         {
-            'project': ObjectId(project['_id']),
-            'temporada': project['temporada'],
-            'es_sitio_de_referencia': True
+            'project_id': ObjectId(project['_id']),
+            'temporada': project['season'],
+            'es_sitio_referencia': True
         }
     )
     sites_name = []

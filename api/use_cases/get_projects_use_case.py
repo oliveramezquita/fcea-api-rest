@@ -8,7 +8,6 @@ class GetProjectsUseCase:
         try:
             projects = get_collection('projects')
             if len(projects) > 0:
-                print(projects)
                 return ok(ProjectSerializer(projects, many=True).data)
             return ok([])
         except Exception as e:

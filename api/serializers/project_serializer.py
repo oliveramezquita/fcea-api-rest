@@ -5,27 +5,27 @@ from fcea_monitoreo.utils import get_collection
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    # reference_sites = serializers.SerializerMethodField(
-    #     "get_reference_sites"
-    # )
+    reference_sites_data = serializers.SerializerMethodField(
+        "get_reference_sites"
+    )
 
-    # intereses_sites = serializers.SerializerMethodField(
-    #     "get_intereses_sites"
-    # )
+    interest_sites_data = serializers.SerializerMethodField(
+        "get_interest_sites"
+    )
 
-    # def get_reference_sites(self, data):
-    #     sites = get_collection(
-    #         'sites', {'project': data['_id'], 'es_sitio_de_referencia': True})
-    #     if not sites:
-    #         return None
-    #     return JSONEncoder().encode(sites)
+    def get_reference_sites(self, data):
+        sites = get_collection(
+            'sites', {'project_id': data['_id'], 'es_sitio_referencia': True})
+        if sites:
+            data['rfs_data']['answers'] = sites
+        return JSONEncoder().encode(data['rfs_data'])
 
-    # def get_intereses_sites(self, data):
-    #     sites = get_collection(
-    #         'sites', {'project': data['_id'], 'es_sitio_de_referencia': False})
-    #     if not sites:
-    #         return None
-    #     return JSONEncoder().encode(sites)
+    def get_interest_sites(self, data):
+        sites = get_collection(
+            'sites', {'project_id': data['_id'], 'es_sitio_referencia': False})
+        if sites:
+            data['its_data']['answers'] = sites
+        return JSONEncoder().encode(data['its_data'])
 
     class Meta:
         model = Project

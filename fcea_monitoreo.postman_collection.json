@@ -96,7 +96,7 @@
 						{
 							"name": "Register user",
 							"request": {
-								"method": "PATCH",
+								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
@@ -108,12 +108,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{URL}}api/users",
+									"raw": "{{URL}}api/user/66102db4cdf8a727ebe79234",
 									"host": [
 										"{{URL}}api"
 									],
 									"path": [
-										"users"
+										"user",
+										"66102db4cdf8a727ebe79234"
 									]
 								}
 							},
@@ -126,7 +127,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"karla.rivera@fcea.org.mx\",\n    \"role\": \"ADMIN\" \n}",
+									"raw": "{\n    \"email\": \"fcea.monitoreo@gmail.com\",\n    \"role\": \"ADMIN\" \n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -190,30 +191,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}api/user/6612e7ab65ce6b13119b80c7",
+									"raw": "{{URL}}api/user/6605add6046d337df94d5ac0",
 									"host": [
 										"{{URL}}api"
 									],
 									"path": [
 										"user",
-										"6612e7ab65ce6b13119b80c7"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Institutions list",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{URL}}api/institutions-list",
-									"host": [
-										"{{URL}}api"
-									],
-									"path": [
-										"institutions-list"
+										"6605add6046d337df94d5ac0"
 									]
 								}
 							},
@@ -224,6 +208,33 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
+								"url": {
+									"raw": "{{URL}}api/user/66102db4cdf8a727ebe79234",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"user",
+										"66102db4cdf8a727ebe79234"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"institution\": \"FECA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{URL}}api/user/66102db4cdf8a727ebe79234",
 									"host": [
@@ -323,7 +334,7 @@
 					]
 				},
 				{
-					"name": "Catalog",
+					"name": "Catalogs",
 					"item": [
 						{
 							"name": "Create catalog",
@@ -412,12 +423,56 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Institutions list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}api/institutions-list",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"institutions-list"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
 					"name": "Projects",
 					"item": [
+						{
+							"name": "Update project",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"activated\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/project/6612dbb482b17b25635a6516",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"project",
+										"6612dbb482b17b25635a6516"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "Get projects",
 							"request": {
@@ -441,22 +496,22 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}api/project/661040e8f7b1d2ba10467d57",
+									"raw": "{{URL}}api/project/661061b7e3c566fa92a07fe3",
 									"host": [
 										"{{URL}}api"
 									],
 									"path": [
 										"project",
-										"661040e8f7b1d2ba10467d57"
+										"661061b7e3c566fa92a07fe3"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Assign places of interest",
+							"name": "Assign forms to users",
 							"request": {
-								"method": "PATCH",
+								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
@@ -481,58 +536,6 @@
 							"response": []
 						}
 					]
-				},
-				{
-					"name": "Submission",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:8000/kobo/submission?waterbody=Rio_o_arroyo",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"kobo",
-								"submission"
-							],
-							"query": [
-								{
-									"key": "waterbody",
-									"value": "Rio_o_arroyo"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reference sites",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://127.0.0.1:8000/kobo/reference-sites",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"kobo",
-								"reference-sites"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -598,7 +601,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\",\n    \"user_name\": \"Karla Rivera\",\n    \"project\": \"Cuenca de Prueba\"\n}",
+							"raw": "{\n    \"email\": \"varilla24@gmail.com\",\n    \"user_name\": \"Karla Rivera\",\n    \"project\": \"Cuenca de Prueba\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -650,7 +653,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"oliver.amezquita@hotmail.com\"\n}",
+							"raw": "{\n    \"email\": \"karla.rivera@fcea.org.mx\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -695,6 +698,24 @@
 							],
 							"path": [
 								"data-proccess"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get raw data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}formsapp/get-raw-data/0",
+							"host": [
+								"{{URL}}formsapp"
+							],
+							"path": [
+								"get-raw-data",
+								"0"
 							]
 						}
 					},

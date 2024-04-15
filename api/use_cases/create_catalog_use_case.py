@@ -7,6 +7,7 @@ from bson import ObjectId
 class CreateCatalogUseCase:
     def __init__(self, catalog_raw_data):
         self.catalog_raw_data = catalog_raw_data
+        self.catalog_raw_data['_deleted'] = False
 
     def execute(self):
         self.validate_params()
@@ -25,10 +26,15 @@ class CreateCatalogUseCase:
                 "El correo electrónico es obligatorio"
             )
 
-        if 'values' not in self.catalog_raw_data:
+        if 'type' not in self.catalog_raw_data:
             raise exceptions.ValidationError(
-                "Debes agregar al menos un valor al catálogo"
+                "Debes seleccionar un tipo de catálogo"
             )
+
+        if self.catalog_raw_data['type'] == 'object':
+            self.catalog_raw_data['values'] = {}
+        else:
+            self.catalog_raw_data['values'] = []
 
     def insert(self):
         self.catalog_raw_data['_id'] = ObjectId()

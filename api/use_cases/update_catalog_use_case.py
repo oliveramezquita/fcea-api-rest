@@ -25,6 +25,21 @@ class UpdateCatalogUseCase:
         except Exception as e:
             return error(e.args[0])
 
+    def delete(self):
+        catalog = get_collection('catalogs', {
+            '_deleted': False,
+            '_id': ObjectId(self.catalog_id)
+        })
+        if not catalog:
+            return not_found(
+                f"Catálogo no encontrado con el id: {str(self.catalog_id)}"
+            )
+        try:
+            self.update()
+            return ok(['Catálogo eliminado exitosamente'])
+        except Exception as e:
+            return error(e.args[0])
+
     def validate_params(self):
         if '_id' in self.catalog_raw_data:
             del self.catalog_raw_data['_id']

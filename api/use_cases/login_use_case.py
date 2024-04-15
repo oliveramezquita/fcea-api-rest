@@ -1,10 +1,14 @@
 from fcea_monitoreo.utils import get_collection
 from rest_framework import exceptions
-from api.helpers.http_responses import ok, bad_request
-from api.serializers.user_serializer import UserSerializer
+from api.helpers.http_responses import bad_request
 from rest_framework.status import HTTP_403_FORBIDDEN
+from django.http import HttpResponse
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from api.helpers.username import extract_username
 import re
 import bcrypt
+import json
 
 
 class LoginUseCase:
@@ -16,7 +20,8 @@ class LoginUseCase:
     def execute(self):
         self.validate_params()
         if self.authentication():
-            return ok(UserSerializer(self.user[0]).data)
+            dump = json.dumps(self.auth_data())
+            return HttpResponse(dump, content_type='application/json')
         return bad_request('Acceso incorrecto', HTTP_403_FORBIDDEN)
 
     def validate_params(self):
@@ -55,3 +60,40 @@ class LoginUseCase:
         password = str(self.login_raw_data['password']).encode('utf-8')
         if bcrypt.checkpw(password, self.user[0]['password']):
             return True
+
+    def auth_data(self):
+        rules = {
+            'SUPER_ADMIN': {
+                'action': 'manage',
+                'subject': 'all'
+            },
+            'ADMIN': {
+                'action': 'manage',
+                'subject': 'almost'
+            },
+            'BRIGADIER': {
+                'action': 'read',
+                'subject': 'except'
+            }
+        }
+        user_data = {
+            '_id': id(self.user[0]['_id']),
+            'fullName': f"{self.user[0]['name']} {self.user[0]['last_name']}",
+            'username': self.get_short_name(),
+            'avatar': None,
+            'email': self.user[0]['email'],
+            'role': self.user[0]['role'],
+        }
+        # user = authenticate(
+        #     username=self.login_raw_data['email'], password=self.login_raw_data['password'])
+        # print(user)
+        return {
+            'userAbilityRules': [rules[self.user[0]['role']]],
+            # 'accessToken': Token.objects.get(user=user),
+            'accessToken': None,
+            'userData': user_data
+        }
+
+    def get_short_name(self):
+        last_name = self.user[0]['last_name'].split()
+        return f"{self.user[0]['name']} {last_name[0]}"

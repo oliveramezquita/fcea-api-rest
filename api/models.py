@@ -17,7 +17,8 @@ class User(models.Model):
 class Catalog(models.Model):
     _id = models.CharField(max_length=50)
     name = models.CharField(max_length=150, null=True)
-    values = models.JSONField()
+    type = models.CharField(max_length=50)
+    values = models.JSONField(null=True)
 
 
 class Project(models.Model):

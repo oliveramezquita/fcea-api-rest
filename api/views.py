@@ -82,6 +82,13 @@ class CatalogViewById(APIView):
             catalog_raw_data=request.data, catalog_id=catalog_id)
         return use_case.execute()
 
+    def delete(self, request, catalog_id):
+        use_case = UpdateCatalogUseCase(
+            catalog_raw_data={'_deleted': True},
+            catalog_id=catalog_id
+        )
+        return use_case.delete()
+
 
 class ProjectsView(APIView):
     def get(self, request):

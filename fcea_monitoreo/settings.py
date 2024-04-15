@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'koboapp',
     'api',
     'formsapp',
@@ -46,6 +47,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'mail_templated',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +67,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'https://admin.calidadagua.mx'
 ]
 
 ROOT_URLCONF = 'fcea_monitoreo.urls'
@@ -136,8 +144,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('0 0 * * *', 'koboapp.scripts.sync.sync_projects'),
-    ('15 0 * * *', 'koboapp.scripts.sync.sync_submission')
+    # ('0 0 * * *', 'koboapp.scripts.sync.sync_projects'),
+    # ('15 0 * * *', 'koboapp.scripts.sync.sync_submission')
 ]
 
 sentry_sdk.init(

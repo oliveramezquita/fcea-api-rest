@@ -10,6 +10,7 @@ django-filter==23.5
 django-mail-templated==2.6.5
 djangorestframework==3.14.0
 dnspython==2.6.1
+filelock==3.13.4
 h11==0.14.0
 idna==3.6
 importlib-metadata==7.0.1
@@ -20,10 +21,12 @@ python-dateutil==2.9.0.post0
 python-decouple==3.8
 pytz==2024.1
 requests==2.31.0
+requests-file==2.0.0
 schedule==1.2.1
 sentry-sdk==1.44.1
 six==1.16.0
 sqlparse==0.4.4
+tldextract==5.1.2
 typing_extensions==4.10.0
 urllib3==1.26.18
 uvicorn==0.28.0

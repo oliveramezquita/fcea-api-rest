@@ -5,5 +5,5 @@ from api.serializers.catalog_serializer import CatalogSerializer
 
 class GetCatalogsUseCase:
     def execute(self):
-        data = get_collection('catalogs')
+        data = get_collection('catalogs', {'_deleted': False})
         return ok(CatalogSerializer(data, many=True).data)

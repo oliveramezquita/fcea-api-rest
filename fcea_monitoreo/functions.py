@@ -1,4 +1,5 @@
 import base64
+import jwt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from decouple import config
@@ -36,3 +37,17 @@ def send_email(template, context):
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=to
     )
+
+
+def encode_user(user):
+    encoded_data = jwt.encode(payload=user,
+                              key=config('AUTH_SECRET'),
+                              algorithm="HS256")
+    return encoded_data
+
+
+def decode_user(token):
+    decoded_data = jwt.decode(jwt=token,
+                              key=config('AUTH_SECRET'),
+                              algorithms=["HS256"])
+    return decoded_data

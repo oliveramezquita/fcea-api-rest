@@ -24,3 +24,20 @@ class GetUserByIdUseCase:
 
         except Exception as e:
             return error(e.args[0])
+
+    def not_registered(self):
+        try:
+            user = get_collection('users', {
+                'activated': False,
+                '_id': ObjectId(self.user_id)
+            })
+
+            if not user:
+                return not_found(
+                    f"Usuario no encontrado con el id: {str(self.user_id)}"
+                )
+
+            return ok(UserSerializer(user[0]).data)
+
+        except Exception as e:
+            return error(e.args[0])

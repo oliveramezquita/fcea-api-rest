@@ -3,6 +3,8 @@ from api import views
 
 
 urlpatterns = [
+    path('register/<str:user_id>',
+         views.UserRegisterView.as_view(), name='register'),
     path('users', views.UsersView.as_view(), name="users-view"),
     path('user/<str:user_id>', views.UserViewById.as_view(), name='user-view-by-id'),
     path('institutions-list', views.InstitutionsListView.as_view(),
@@ -19,11 +21,4 @@ urlpatterns = [
     path('project/<str:project_id>',
          views.ProjectViewById.as_view(), name="project-view-by-id"),
     path('test-data', views.TestDataView.as_view(), name="test-data"),
-    path('encrypt', views.EncryptView.as_view(), name='test-encrypt'),
-    path('test-form-email', views.TestEmailFormView.as_view(),
-         name="test-form-email"),
-    path('test-register-email', views.TestEmailRegisterView.as_view(),
-         name="test-register-email"),
-    path('test-reset-password-email', views.TestEmailResetPasswordView.as_view(),
-         name="test-reset-password-email"),
 ]

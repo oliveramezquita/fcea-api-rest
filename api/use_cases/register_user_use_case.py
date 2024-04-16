@@ -5,7 +5,6 @@ from api.serializers.user_serializer import UserSerializer
 from bson import ObjectId
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from api.helpers.username import extract_username
 import re
 import bcrypt
 

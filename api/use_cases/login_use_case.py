@@ -1,11 +1,11 @@
 from fcea_monitoreo.utils import get_collection
+from fcea_monitoreo.functions import encode_user
 from rest_framework import exceptions
 from api.helpers.http_responses import bad_request
 from rest_framework.status import HTTP_403_FORBIDDEN
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from api.helpers.username import extract_username
 import re
 import bcrypt
 import json
@@ -77,7 +77,7 @@ class LoginUseCase:
             }
         }
         user_data = {
-            '_id': id(self.user[0]['_id']),
+            '_id': str(self.user[0]['_id']),
             'fullName': f"{self.user[0]['name']} {self.user[0]['last_name']}",
             'username': self.get_short_name(),
             'avatar': None,
@@ -90,7 +90,7 @@ class LoginUseCase:
         return {
             'userAbilityRules': [rules[self.user[0]['role']]],
             # 'accessToken': Token.objects.get(user=user),
-            'accessToken': None,
+            'accessToken': encode_user(user_data),
             'userData': user_data
         }
 

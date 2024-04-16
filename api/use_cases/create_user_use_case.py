@@ -44,7 +44,6 @@ class CreateUserUseCase:
             )
 
         # validate rol
-        print(self.user_raw_data['role'])
         roles = ['SUPER_ADMIN', 'ADMIN', 'BRIGADIER']
         if self.user_raw_data['role'] not in roles:
             raise exceptions.ValidationError(

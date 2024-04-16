@@ -2,6 +2,7 @@ from rest_framework import exceptions
 from fcea_monitoreo.utils import insert_document
 from api.helpers.http_responses import created, bad_request, error
 from bson import ObjectId
+from formsapp.models import Project
 
 
 class CreateProjectUseCase:
@@ -41,9 +42,14 @@ class CreateProjectUseCase:
 
     def insert(self):
         self.project_raw_data['_id'] = ObjectId()
-        return insert_document(
-            'projects',
-            self.project_raw_data,
-            {
-                'name': self.project_raw_data['name'],
-            })
+        try:
+            Project.objects.create(
+                name=self.project_raw_data['name'], season=self.project_raw_data['season'])
+            return insert_document(
+                'projects',
+                self.project_raw_data,
+                {
+                    'name': self.project_raw_data['name'],
+                })
+        except Exception as e:
+            return error(e.args[0])

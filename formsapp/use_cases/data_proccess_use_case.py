@@ -3,6 +3,7 @@ from api.helpers.http_responses import created, error
 from formsapp.scripts import formulas
 from fcea_monitoreo.utils import get_collection, insert_document, update_document
 from fcea_monitoreo.functions import get_altitude
+from formsapp.tasks import data_synchronize
 from bson import ObjectId
 from dateutil import parser
 import json
@@ -102,6 +103,11 @@ class DataProccessUseCase:
             self.raw_data['answer']['createDate'])
         insert_document('sites', mapped_data, {
             'nombre_sitio': mapped_data['nombre_sitio']})
+        data_synchronize(
+            data=mapped_data,
+            project_name=data.get('cuenca'),
+            site_reference_name=data.get('sitio_de_referencia')
+        )
 
     def _get_project(self, data):
         project = get_collection('projects', {'name': data.get('cuenca')})

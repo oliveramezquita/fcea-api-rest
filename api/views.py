@@ -164,4 +164,4 @@ class ResetPasswordView(APIView):
 class TestDataView(APIView):
     def post(self, request):
         testdata_use_case = TestDataUseCase(raw_data=request.data)
-        return testdata_use_case.test_data()
+        return testdata_use_case.test_locations()

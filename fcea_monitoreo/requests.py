@@ -13,8 +13,15 @@ def kobo_request(path):
     return response
 
 
-def google_request(lat, lng):
+def get_elevation_request(lat, lng):
     api_key = config('GOOGLE_API_KEY')
     google_url = "https://maps.googleapis.com/maps/api/elevation/json?locations="
     url = f'{google_url}{lat},{lng}&key={api_key}'
+    return get(url=url)
+
+
+def get_geocode_request(lat, lng):
+    api_key = config('GOOGLE_API_KEY')
+    google_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+    url = f'{google_url}{lat},{lng}&key={api_key}&sensor=false'
     return get(url=url)

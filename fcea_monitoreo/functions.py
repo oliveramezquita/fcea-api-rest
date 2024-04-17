@@ -3,7 +3,7 @@ import jwt
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 from decouple import config
-from fcea_monitoreo.requests import google_request
+from fcea_monitoreo.requests import get_elevation_request, get_geocode_request
 from mail_templated import send_mail
 from django.conf import settings
 
@@ -23,9 +23,19 @@ def decrypt(enc):
 
 
 def get_altitude(lat, lng):
-    response = google_request(lat, lng)
+    response = get_elevation_request(lat, lng)
     data = response.json()['results'][0]
     return "{:.2f}".format(data['elevation'])
+
+
+def get_geocode(lat, lng):
+    response = get_geocode_request(lat, lng)
+    data = response.json()['results'][0]['address_components']
+    locality = next(
+        (item for item in data if 'locality' in item['types']), None)
+    administrative_area_level_1 = next(
+        (item for item in data if 'administrative_area_level_1' in item['types']), None)
+    return locality['long_name'], administrative_area_level_1['long_name']
 
 
 def send_email(template, context):

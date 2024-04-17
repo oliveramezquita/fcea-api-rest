@@ -4,7 +4,7 @@ from rest_framework.status import (
 from django.http import JsonResponse
 from fcea_monitoreo.functions import encrypt
 from urllib import parse
-from fcea_monitoreo.functions import send_email
+from fcea_monitoreo.functions import send_email, get_geocode
 from fcea_monitoreo.utils import get_collection
 
 
@@ -71,6 +71,14 @@ class TestDataUseCase:
         )
 
         response = JsonResponse([reponse_email], safe=False)
+        response.status_code = HTTP_200_OK
+
+        return response
+
+    def test_locations(self):
+        city, state = get_geocode(self.raw_data['lat'], self.raw_data['lng'])
+
+        response = JsonResponse([city, state], safe=False)
         response.status_code = HTTP_200_OK
 
         return response

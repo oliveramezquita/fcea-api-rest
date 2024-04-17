@@ -2,7 +2,7 @@ from formsapp.scripts.formsapp_parse import parse_data
 from api.helpers.http_responses import created, error
 from formsapp.scripts import formulas
 from fcea_monitoreo.utils import get_collection, insert_document, update_document
-from fcea_monitoreo.functions import get_altitude
+from fcea_monitoreo.functions import get_altitude, get_geocode
 from formsapp.tasks import data_synchronize
 from bson import ObjectId
 from dateutil import parser
@@ -29,6 +29,10 @@ class DataProccessUseCase:
 
     def _insert_site(self, data):
         project = self._get_project(data)
+        city, state = get_geocode(
+            float(data.get('ubicacion_del_sitio_de_monitoreo/latitud')),
+            float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
+        )
         mapped_data = {}
         mapped_data['_id'] = self.site_id
         mapped_data['project_id'] = project['_id'] if project else data.get(
@@ -49,6 +53,8 @@ class DataProccessUseCase:
             data.get('ubicacion_del_sitio_de_monitoreo/longitud'))
         mapped_data['altitud'] = float(get_altitude(
             mapped_data['latitud'], mapped_data['longitud']))
+        mapped_data['estado'] = state
+        mapped_data['ciudad'] = city
         mapped_data['tipo_cuerpo_agua'] = formulas.get_tipo_cuerpo_de_agua(
             data, 'selecciona_el_tipo_de_cuerpo_de_agua')
         mapped_data['fecha'] = parser.isoparse(data.get('fecha_del_monitoreo'))

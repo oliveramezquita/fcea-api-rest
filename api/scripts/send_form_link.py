@@ -7,16 +7,16 @@ from bson import ObjectId
 def send_form_link(project, site_type, user_id):
     user = get_email_from_user(user_id)
     url_form = parse_url(project, user['email'], site_type)
-    # send_email(
-    #     template="mail_templated/form.html",
-    #     context={
-    #         'subject': f"Formato de campo digital cuenca: {project['name']}",
-    #         'email': user['email'],
-    #         'user_name': f"{user['name']} {user['last_name']}",
-    #         'project': project['name'],
-    #         'link_href': url_form
-    #     },
-    # )
+    send_email(
+        template="mail_templated/form.html",
+        context={
+            'subject': f"Formato de campo digital cuenca: {project['name']}",
+            'email': user['email'],
+            'user_name': f"{user['name']} {user['last_name']}",
+            'project': project['name'],
+            'link_href': url_form
+        },
+    )
     return url_form
 
 

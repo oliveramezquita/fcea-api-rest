@@ -69,11 +69,11 @@ class LoginUseCase:
             },
             'ADMIN': {
                 'action': 'manage',
-                'subject': 'almost'
+                'subject': 'all'
             },
             'BRIGADIER': {
                 'action': 'read',
-                'subject': 'except'
+                'subject': 'brigadier'
             }
         }
         user_data = {
@@ -84,12 +84,8 @@ class LoginUseCase:
             'email': self.user[0]['email'],
             'role': self.user[0]['role'],
         }
-        # user = authenticate(
-        #     username=self.login_raw_data['email'], password=self.login_raw_data['password'])
-        # print(user)
         return {
             'userAbilityRules': [rules[self.user[0]['role']]],
-            # 'accessToken': Token.objects.get(user=user),
             'accessToken': encode_user(user_data),
             'userData': user_data
         }

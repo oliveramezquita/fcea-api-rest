@@ -11,7 +11,6 @@ class CreateProjectUseCase:
         self.project_raw_data['activated'] = True
         self.project_raw_data['rfs_data'] = {}
         self.project_raw_data['its_data'] = {}
-        self.project_raw_data['admin_users'] = []
 
     def execute(self):
         self.validate_params()
@@ -33,6 +32,9 @@ class CreateProjectUseCase:
             raise exceptions.ValidationError(
                 "La temporada es obligatoria"
             )
+
+        if 'admin_users' not in self.project_raw_data:
+            self.project_raw_data['admin_users'] = []
 
         # validate rol
         seasons = ['Secas', 'Lluvias']

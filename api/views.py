@@ -123,6 +123,12 @@ class ProjectsView(APIView):
             return use_case.execute()
 
 
+class PublicProjectsView(APIView):
+    def get(self, request):
+        use_case = GetProjectsUseCase()
+        return use_case.execute()
+
+
 class ProjectViewById(APIView):
     authentication_classes = [FceaAuthenticationMiddleware]
 

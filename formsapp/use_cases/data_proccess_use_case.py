@@ -108,7 +108,9 @@ class DataProccessUseCase:
         mapped_data['create_date'] = parser.isoparse(
             self.raw_data['answer']['createDate'])
         insert_document('sites', mapped_data, {
-            'nombre_sitio': mapped_data['nombre_sitio']})
+            'nombre_sitio': mapped_data['nombre_sitio'],
+            'project_id': mapped_data['project_id']
+        })
         data_synchronize(
             data=mapped_data,
             project_name=data.get('cuenca'),

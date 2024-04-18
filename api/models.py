@@ -25,4 +25,5 @@ class Project(models.Model):
     _id = models.CharField(max_length=50)
     name = models.CharField(max_length=255)
     season = models.CharField(max_length=50)
+    admin_users = models.JSONField(null=True)
     activated = models.BooleanField()

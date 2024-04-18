@@ -24,8 +24,10 @@ class AssignProjectUseCase:
             )
         try:
             data = self.match_projects(project[0])
-            data[self.site_type]['users_url_form'] = self.create_users_url_form(
-                data)
+            # data[self.site_type]['users_url_form'] = self.create_users_url_form(
+            #     data)
+            self.send_url_form(data)
+            # data = self.set_reference_in_interest(data)
             updated_project = self.update(data)
             return ok(ProjectSerializer(updated_project).data)
         except Exception as e:
@@ -65,12 +67,16 @@ class AssignProjectUseCase:
             project
         )
 
-    def create_users_url_form(self, project):
-        users_url_form = project[self.site_type]['users_url_form'] if 'users_url_form' in project[self.site_type] else [
-        ]
+    def send_url_form(self, project):
         for user in self.new_users:
-            new_users_url_form = {}
-            new_users_url_form[user] = send_form_link(
-                project, self.site_type, user)
-            users_url_form.append(new_users_url_form)
-        return users_url_form
+            send_form_link(project, self.site_type, user)
+
+    # def set_reference_in_interest(self, project):
+    #     if self.site_type == 'its_data':
+    #         site_reference = get_collection('sites', {
+    #             'project_id': ObjectId(project['_id']),
+    #             'es_sitio_referencia': True,
+    #         })[0]
+    #         project['its_data']['rfs_name'] = site_reference['nombre_sitio']
+
+    #     return project

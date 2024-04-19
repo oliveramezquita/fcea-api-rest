@@ -22,5 +22,6 @@ urlpatterns = [
          views.ProjectViewById.as_view(), name="project-view-by-id"),
     path('public-projects', views.PublicProjectsView.as_view(),
          name="public-projects"),
+    path('faqs', views.FaqsView.as_view(), name="faqs-view"),
     path('test-data', views.TestDataView.as_view(), name="test-data"),
 ]

@@ -18,6 +18,7 @@ from api.use_cases.get_project_by_id_use_case import GetProjectByIdUseCase
 from api.use_cases.update_project_use_case import UpdateProjectUseCase
 from api.use_cases.create_project_use_case import CreateProjectUseCase
 from api.use_cases.assign_project_use_case import AssignProjectUseCase
+from api.use_cases.get_faqs_use_case import GetFaqsUseCase
 from .middlewares import FceaAuthenticationMiddleware
 from django.db.transaction import atomic
 
@@ -165,6 +166,12 @@ class ResetPasswordView(APIView):
     def post(self, request):
         reset_password_use_case = ResetPasswordUseCase(raw_data=request.data)
         return reset_password_use_case.execute()
+
+
+class FaqsView(APIView):
+    def get(self, request):
+        use_case = GetFaqsUseCase()
+        return use_case.execute()
 
 
 class TestDataView(APIView):

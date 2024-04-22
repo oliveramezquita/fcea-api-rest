@@ -19,6 +19,7 @@ from api.use_cases.update_project_use_case import UpdateProjectUseCase
 from api.use_cases.create_project_use_case import CreateProjectUseCase
 from api.use_cases.assign_project_use_case import AssignProjectUseCase
 from api.use_cases.get_faqs_use_case import GetFaqsUseCase
+from api.use_cases.get_sites_use_case import GetSitesUseCase
 from .middlewares import FceaAuthenticationMiddleware
 from django.db.transaction import atomic
 
@@ -124,10 +125,16 @@ class ProjectsView(APIView):
             return use_case.execute()
 
 
-class PublicProjectsView(APIView):
+class PublicSitesView(APIView):
     def get(self, request):
-        use_case = GetProjectsUseCase()
+        use_case = GetSitesUseCase(request)
         return use_case.execute()
+
+
+class SiteFiltersView(APIView):
+    def get(self, request):
+        use_case = GetSitesUseCase(request)
+        return use_case.get_site_filters()
 
 
 class ProjectViewById(APIView):

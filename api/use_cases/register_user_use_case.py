@@ -3,8 +3,8 @@ from rest_framework import exceptions
 from fcea_monitoreo.utils import update_document, get_collection
 from api.serializers.user_serializer import UserSerializer
 from bson import ObjectId
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
+# from django.contrib.auth.models import User
+# from rest_framework.authtoken.models import Token
 import re
 import bcrypt
 
@@ -47,6 +47,13 @@ class RegisterUserUseCase:
         if 'phone' not in self.user_raw_data:
             raise exceptions.ValidationError(
                 "El télefono es obligatorio"
+            )
+        if 'institution' not in self.user_raw_data:
+            raise exceptions.ValidationError(
+                "La institución goburnamental o educativa es obligatoria"
+            )
+        else:
+            self.user_raw_data['institution'] = self.user_raw_data['institution'].strip(
             )
 
         # validate email

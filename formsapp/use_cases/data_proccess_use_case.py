@@ -6,7 +6,6 @@ from fcea_monitoreo.functions import get_altitude, get_geocode
 from formsapp.tasks import data_synchronize
 from bson import ObjectId
 from dateutil import parser
-import json
 
 
 class DataProccessUseCase:
@@ -21,7 +20,7 @@ class DataProccessUseCase:
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
-            return error(e.args[0])
+            return error(e.args[0]),
 
     def _insert_formsapp_raw_data(self, data):
         data['_id'] = self.site_id
@@ -33,19 +32,20 @@ class DataProccessUseCase:
             float(data.get('ubicacion_del_sitio_de_monitoreo/latitud')),
             float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
         )
+        user_id, institution = self._get_user(data.get('correo_electronico'))
         mapped_data = {}
-        mapped_data['_id'] = self.site_id
+        mapped_data['_id'] = ObjectId(self.site_id)
         mapped_data['project_id'] = project['_id'] if project else data.get(
             'cuenca')
         mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
             data)
-        mapped_data['user_id'] = self._get_user_id(
-            data.get('correo_electronico'))
+        mapped_data['user_id'] = user_id
+        mapped_data['institucion'] = institution
         mapped_data['brigadistas'] = data.get(
             'nombre_de_las_y_los_integrantes_del_equipo')
-        mapped_data['nombre_sitio'] = data.get('nombre_del_sitio')
+        mapped_data['nombre_sitio'] = data.get('nombre_del_sitio').strip()
         mapped_data['codigo_sitio'] = data.get('clave_del_sitio')
         mapped_data['latitud'] = float(
             data.get('ubicacion_del_sitio_de_monitoreo/latitud'))
@@ -123,7 +123,7 @@ class DataProccessUseCase:
             return None
         return project[0]
 
-    def _get_user_id(self, email):
+    def _get_user(self, email):
         user = get_collection(
             'users',
             {
@@ -133,7 +133,7 @@ class DataProccessUseCase:
         )
         if not user:
             return email
-        return user[0]['_id']
+        return user[0]['_id'], user[0]['institution']
 
     def _get_sitio_de_referencias(self, data):
         sitio = get_collection(
@@ -145,4 +145,4 @@ class DataProccessUseCase:
         )
         if not sitio:
             return data.get('sitio_de_referencia') if data.get('sitio_de_referencia') != '' else None
-        return sitio[0]['_id']
+        return ObjectId(sitio[0]['_id'])

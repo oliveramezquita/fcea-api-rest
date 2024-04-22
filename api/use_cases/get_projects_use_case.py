@@ -9,6 +9,6 @@ class GetProjectsUseCase:
             projects = get_collection('projects')
             if len(projects) > 0:
                 return ok(ProjectSerializer(projects, many=True).data)
-            return not_found("No existen proyectos hasta el momento")
+            return ok([])
         except Exception as e:
             return error(e.args[0])

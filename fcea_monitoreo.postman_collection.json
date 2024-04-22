@@ -786,7 +786,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Cuenca Prueba\",\n    \"season\": \"Lluvias\"\n}",
+									"raw": "{\n    \"name\": \"Río Manialtepec\",\n    \"season\": \"Lluvias\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -804,25 +804,76 @@
 								}
 							},
 							"response": []
-						},
+						}
+					]
+				},
+				{
+					"name": "Sites",
+					"item": [
 						{
-							"name": "Get projects public",
+							"name": "Get site filters",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}api/public-projects",
+									"raw": "{{URL}}api/site-filters",
 									"host": [
 										"{{URL}}api"
 									],
 									"path": [
-										"public-projects"
+										"site-filters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get public sites",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api/public-sites",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"public-sites"
 									]
 								}
 							},
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Get faqs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/faqs",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"faqs"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

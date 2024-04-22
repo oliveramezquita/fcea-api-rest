@@ -6,24 +6,20 @@
             "faqSubtitle": "¿Qué necesitas saber acerca de las cuencas?",
             "faqs": [
                 {
-                    "question": "¿Qué es una cuenca?",
+                    "question": "¿Qué es el monitoreo comunitario del agua?",
                     "answer": "Parte de la superficie terrestre cuyas aguas fluyen hacia un mismo río o lago."
                 },
                 {
-                    "question": "¿Quién puede dar de alta nuevas cuencas?",
+                    "question": "¿Cómo se realiza la evaluación?",
                     "answer": "Solo el personal del Fondo para la Comunicación y la Educación Ambiental pueden dar de alta nuevas cuencas."
                 },
                 {
-                    "question": "¿Cada cuando una cuenca recompila información?",
+                    "question": "¿Qué es un sitio de referencia y un sitio de interés?",
                     "answer": "For any technical difficulties you are experiencing with our website, please contact us at our support portal, or you can call us toll-free at 1-000-000-000, or email us at order@companymail.com"
                 },
                 {
-                    "question": "¿Qué son los sitios de referencia?",
+                    "question": "¿Cómo puedo ver los resultados del monitoreo?",
                     "answer": "If you have paying users or you are developing any SaaS products then you need an Extended License. For each products, you need a license. You can get free lifetime updates as well."
-                },
-                {
-                    "question": "¿Qué son los sitios de interés?",
-                    "answer": "No, This is not subscription based item.Pastry pudding cookie toffee bonbon jujubes jujubes powder topping. Jelly beans gummi bears sweet roll bonbon muffin liquorice. Wafer lollipop sesame snaps."
                 }
             ]
         },
@@ -47,40 +43,13 @@
             ]
         },
         {
-            "faqTitle": "Catálogos",
-            "faqIcon": "tabler-list-details",
-            "faqSubtitle": "¿Qué necesitas saber acerca de los catálogos?",
-            "faqs": [
-                {
-                    "question": "Can I cancel my order?",
-                    "answer": "Scheduled delivery orders can be cancelled 72 hours prior to your selected delivery date for full refund. Parcel delivery orders cannot be cancelled, however a free return label can be provided upon request."
-                },
-                {
-                    "question": "Can I return my product?",
-                    "answer": "You can return your product within 15 days of delivery, by contacting our support team, All merchandise returned must be in the original packaging with all original items."
-                },
-                {
-                    "question": "Where can I view status of return?",
-                    "answer": "Locate the item from Your Orders. Select Return/Refund status"
-                }
-            ]
-        },
-        {
             "faqTitle": "Formato de campo",
             "faqIcon": "tabler-notes",
             "faqSubtitle": "¿Qué necesitas saber de los formatos de campo?",
             "faqs": [
                 {
-                    "question": "Has my order been successful?",
-                    "answer": "All successful order transactions will receive an order confirmation email once the order has been processed. If you have not received your order confirmation email within 24 hours, check your junk email or spam folder. Alternatively, log in to your account to check your order summary. If you do not have a account, you can contact our Customer Care Team on 1-000-000-000."
-                },
-                {
-                    "question": "My Promotion Code is not working, what can I do?",
-                    "answer": "If you are having issues with a promotion code, please contact us at 1 000 000 000 for assistance."
-                },
-                {
-                    "question": "How do I track my Orders?",
-                    "answer": "If you have an account just sign into your account from here and select “My Orders”. If you have a a guest account track your order from here using the order number and the email address."
+                    "question": "¿Qué es un formato de campo?",
+                    "answer": "Es un formulario en línea para capturar la información del sitio de referencia o sitio de interés."
                 }
             ]
         }

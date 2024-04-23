@@ -1,5 +1,9 @@
-from api.helpers.http_responses import ok
+from api.helpers.http_responses import ok, not_found
 from rest_framework import exceptions
+from fcea_monitoreo.utils import get_collection
+from fcea_monitoreo.functions import send_email, encrypt
+from fcea_monitoreo.settings import ADMIN_URL
+from urllib import parse
 import re
 
 
@@ -9,7 +13,12 @@ class ForgotPasswordUseCase:
 
     def execute(self):
         self.validate_params()
-        # TODO: Enviar enlace para restablecer la contraseña
+        user = get_collection('users', {'email': self.raw_data['email']})
+        if not user:
+            return not_found(
+                f"Usuario no encontrado con el email: {self.raw_data['email']}"
+            )
+        self.send_link(user[0])
         return ok([f"Se ha enviado el enlace para restablecer la contraseña al correo electrónico: {self.raw_data['email']}"])
 
     def validate_params(self):
@@ -25,3 +34,15 @@ class ForgotPasswordUseCase:
             raise exceptions.ValidationError(
                 "El correo electrónico es incorrecto"
             )
+
+    def send_link(self, user):
+        key = parse.quote_plus(encrypt(str(user['_id'])))
+        link = f"{ADMIN_URL}reset-password?rt={key}"
+        send_email(
+            template="mail_templated/reset-password.html",
+            context={
+                'subject': 'Solicitud de cambio de contraseña',
+                'email': self.raw_data['email'],
+                'link_href': link,
+            },
+        )

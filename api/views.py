@@ -40,6 +40,12 @@ class UserRegisterView(APIView):
             return use_case.execute()
 
 
+class PublicUserView(APIView):
+    def get(self, request, user_id):
+        use_case = GetUserByIdUseCase(request, user_id)
+        return use_case.execute()
+
+
 class UsersView(APIView):
     authentication_classes = [FceaAuthenticationMiddleware]
 
@@ -169,10 +175,16 @@ class ForgotPasswordView(APIView):
         return forgot_password_use_case.execute()
 
 
-class ResetPasswordView(APIView):
+class ResetPasswordInsideView(APIView):
     def post(self, request):
         reset_password_use_case = ResetPasswordUseCase(raw_data=request.data)
-        return reset_password_use_case.execute()
+        return reset_password_use_case.reset_password_inside()
+
+
+class ResetPasswordOutsideView(APIView):
+    def post(self, request):
+        reset_password_use_case = ResetPasswordUseCase(raw_data=request.data)
+        return reset_password_use_case.reset_password_outside()
 
 
 class FaqsView(APIView):

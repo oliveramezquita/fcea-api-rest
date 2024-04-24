@@ -6,6 +6,8 @@ from fcea_monitoreo.functions import encrypt
 from urllib import parse
 from fcea_monitoreo.functions import send_email, get_geocode
 from fcea_monitoreo.utils import get_collection
+from bs4 import BeautifulSoup
+import requests
 
 
 class TestDataUseCase:
@@ -81,4 +83,16 @@ class TestDataUseCase:
         response = JsonResponse([city, state], safe=False)
         response.status_code = HTTP_200_OK
 
+        return response
+
+    def test_scrape_url_images(self):
+        url = "https://forms.app/recordimage/6612f856d861385a599f264b/bde0eaac-f516-11ee-aae9-0242ac120004?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbnN3ZXJJZCI6IjY2MTJmODU2ZDg2MTM4NWE1OTlmMjY0YiIsImZvcm1JZCI6IjY2MGY3OGVkMDkxNjYxZDIzODg1MjQ2YiIsImlhdCI6MTcxMjUxOTI1NCwiZXhwIjoxNzQzNjIzMjU0fQ.OlsaBOamcavezZJioqk4-bFXl2rhrKycjXzdVOHoI4Y"
+        # Execute GET request
+        response = requests.get(url)
+        # Parse the HTML document from the source code using BeautifulSoup
+        html = BeautifulSoup(response.text, 'html.parser')
+        print(html)
+
+        response = JsonResponse([], safe=False)
+        response.status_code = HTTP_200_OK
         return response

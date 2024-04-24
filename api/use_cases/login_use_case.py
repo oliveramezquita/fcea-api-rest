@@ -69,7 +69,7 @@ class LoginUseCase:
             },
             'ADMIN': {
                 'action': 'manage',
-                'subject': 'all'
+                'subject': 'admin'
             },
             'BRIGADIER': {
                 'action': 'read',

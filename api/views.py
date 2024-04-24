@@ -196,4 +196,4 @@ class FaqsView(APIView):
 class TestDataView(APIView):
     def post(self, request):
         testdata_use_case = TestDataUseCase(raw_data=request.data)
-        return testdata_use_case.test_locations()
+        return testdata_use_case.test_scrape_url_images()

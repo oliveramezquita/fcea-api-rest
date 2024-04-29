@@ -35,13 +35,13 @@ class DataProccessUseCase:
         user_id, institution = self._get_user(data.get('correo_electronico'))
         mapped_data = {}
         mapped_data['_id'] = ObjectId(self.site_id)
-        mapped_data['project_id'] = project['_id'] if project else data.get(
+        mapped_data['project_id'] = ObjectId(project['_id']) if project else data.get(
             'cuenca')
         mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
             data)
-        mapped_data['user_id'] = user_id
+        mapped_data['user_id'] = ObjectId(user_id)
         mapped_data['institucion'] = institution
         mapped_data['brigadistas'] = data.get(
             'nombre_de_las_y_los_integrantes_del_equipo')

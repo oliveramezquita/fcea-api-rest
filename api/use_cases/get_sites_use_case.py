@@ -24,15 +24,11 @@ class GetSitesUseCase:
         # site
         self.site = params['site'][0] if 'site' in params else None
 
-        self.projects = get_collection('projects')
-
     def execute(self):
         try:
             filters = {}
             if self.project:
                 filters['project_id'] = ObjectId(self.project)
-            elif self.projects:
-                filters['project_id'] = ObjectId(self.projects[0]['_id'])
             if self.state:
                 filters['estado'] = self.state
             if self.institution:
@@ -56,19 +52,16 @@ class GetSitesUseCase:
 
     def get_site_filters(self):
         try:
-            filters = {}
-            if self.project:
-                filters['project_id'] = ObjectId(self.project)
-            elif self.projects:
-                filters['project_id'] = ObjectId(self.projects[0]['_id'])
-            sites = get_collection('sites', filters)
+            projects = self.get_filter_projects()
+            sites = get_collection(
+                'sites', {'project_id': ObjectId(projects[0]['value'])})
             if sites:
                 states = list(set(p['estado'] for p in sites))
                 institution = list(set(p['institucion'] for p in sites))
                 sites = list(set(p['nombre_sitio'] for p in sites))
                 resp = {
-                    'default_project': str(self.projects[0]['_id']),
-                    'projects': self.get_filter_projects(),
+                    'default_project': str(projects[0]['value']),
+                    'projects': projects,
                     'states': states,
                     'institution': institution,
                     'sites': sites
@@ -79,8 +72,9 @@ class GetSitesUseCase:
             return error(e.args[0])
 
     def get_filter_projects(self):
+        projects = get_collection('projects')
         project_list = []
-        for project in self.projects:
+        for project in projects:
             sites = get_collection(
                 'sites', {'project_id': ObjectId(project['_id'])})
             if sites:
@@ -97,7 +91,30 @@ class GetSitesUseCase:
             site['project_id'] = str(site['project_id'])
             site['sitio_referencia_id'] = str(
                 site['sitio_referencia_id']) if site['sitio_referencia_id'] else None
+            site['reference_site_scores'] = self.get_reference_site_scores(
+                site['sitio_referencia_id'])
             site['user_id'] = str(site['user_id'])
             site['fecha'] = site['fecha'].isoformat()
             resp_sites.append(site)
         return resp_sites
+
+    def get_reference_site_scores(self, sitio_referencia_id):
+        sitio_referencia = get_collection(
+            'sites', {
+                '_id': ObjectId(sitio_referencia_id),
+                'es_sitio_referencia': True
+            })
+        if sitio_referencia:
+            return {
+                'nombre_sitio': sitio_referencia[0]['nombre_sitio'],
+                'ph': sitio_referencia[0]['ph'],
+                'temperatura_agua': sitio_referencia[0]['temperatura_agua'],
+                'temperatura_ambiental': sitio_referencia[0]['temperatura_ambiental'],
+                'turbidez': sitio_referencia[0]['turbidez'],
+                'nitratos': sitio_referencia[0]['nitratos'],
+                'amonio': sitio_referencia[0]['amonio'],
+                'ortofosfatos': sitio_referencia[0]['ortofosfatos'],
+                'saturacion': sitio_referencia[0]['saturacion'],
+                'oxigeno_disuelto': sitio_referencia[0]['oxigeno_disuelto'],
+            }
+        return None

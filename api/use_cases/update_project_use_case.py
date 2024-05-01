@@ -2,11 +2,16 @@ from api.helpers.http_responses import ok, error, not_found
 from fcea_monitoreo.utils import update_document, get_collection
 from api.serializers.project_serializer import ProjectSerializer
 from api.scripts.send_form_link import send_form_link
+from django.http import QueryDict
+from django.core.files.storage import FileSystemStorage
+from rest_framework import exceptions
 from bson import ObjectId
+import os
 
 
 class UpdateProjectUseCase:
-    def __init__(self, project_raw_data, project_id):
+    def __init__(self, base_url, project_raw_data, project_id):
+        self.base_url = base_url
         self.project_raw_data = project_raw_data
         self.project_id = project_id
 
@@ -19,7 +24,10 @@ class UpdateProjectUseCase:
                 f"No se encontró ningún proyecto con el id: {str(self.project_id)}"
             )
         try:
-            data = self.update(project[0])
+            if isinstance(self.project_raw_data, QueryDict):
+                data = self.upload_geojson_file()
+            else:
+                data = self.update(project[0])
             return ok(ProjectSerializer(data).data)
         except Exception as e:
             return error(e.args[0])
@@ -34,8 +42,30 @@ class UpdateProjectUseCase:
 
         return update_document(
             'projects',
-            {
-                '_id': ObjectId(self.project_id),
-            },
+            {'_id': ObjectId(self.project_id)},
             self.project_raw_data
         )
+
+    def upload_geojson_file(self):
+        if 'geojson_file' in self.project_raw_data:
+            geojson_file = self.project_raw_data['geojson_file']
+            fs = FileSystemStorage(
+                location='media/files', base_url='media/files')
+            filename = f'media/files/{geojson_file.name}'
+            if os.path.exists(filename):
+                os.remove(filename)
+
+            ext = os.path.splitext(geojson_file.name)[1]
+            if not ext.lower() in ['.geojson']:
+                raise exceptions.ValidationError(
+                    "El archivo no es un GeoJSON"
+                )
+
+            filename = fs.save(geojson_file.name, geojson_file)
+            uploaded_file_url = fs.url(filename)
+            return update_document(
+                'projects',
+                {'_id': ObjectId(self.project_id)},
+                {'geojson_file': f"{self.base_url}/{uploaded_file_url}"}
+            )
+        return []

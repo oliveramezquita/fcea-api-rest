@@ -3,7 +3,7 @@ from api.helpers.http_responses import not_found, error
 from urllib.parse import parse_qs
 from django.http import HttpResponse
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 
@@ -39,6 +39,7 @@ class GetSitesUseCase:
                 filters['parameter'] = self.parameter
             if self.site:
                 filters['nombre_sitio'] = self.site
+            print(filters)
             sites = self.get_sites(filters)
             if len(sites) > 0:
                 return HttpResponse(json.dumps(sites), content_type='application/json')
@@ -48,19 +49,23 @@ class GetSitesUseCase:
 
     def filter_by_dates(self):
         dates = self.dates.split(" to ")
-        return {'$gte': datetime.strptime(dates[0], '%Y-%m-%d'), '$lt': datetime.strptime(dates[1], '%Y-%m-%d')}
+        lt = datetime.strptime(dates[-1], '%Y-%m-%d')
+        return {'$gte': datetime.strptime(dates[0], '%Y-%m-%d'), '$lt': lt + timedelta(days=1)}
 
     def get_site_filters(self):
         try:
-            projects = self.get_filter_projects()
+            projects, geojson_data = self.get_filter_projects()
+            index = next((index for (index, p) in enumerate(
+                projects) if p["value"] == self.project), 0)
             sites = get_collection(
-                'sites', {'project_id': ObjectId(projects[0]['value'])})
+                'sites', {'project_id': ObjectId(projects[index]['value'])})
             if sites:
                 states = list(set(p['estado'] for p in sites))
                 institution = list(set(p['institucion'] for p in sites))
                 sites = list(set(p['nombre_sitio'] for p in sites))
                 resp = {
-                    'default_project': str(projects[0]['value']),
+                    'default_project': str(projects[index]['value']),
+                    'geojson_data': geojson_data[index],
                     'projects': projects,
                     'states': states,
                     'institution': institution,
@@ -74,13 +79,16 @@ class GetSitesUseCase:
     def get_filter_projects(self):
         projects = get_collection('projects')
         project_list = []
+        project_geojson = []
         for project in projects:
             sites = get_collection(
                 'sites', {'project_id': ObjectId(project['_id'])})
             if sites:
                 project_list.append(
                     {'value': str(project['_id']), 'title': project['name']})
-        return project_list
+            project_geojson.append(
+                project['geojson_file'] if 'geojson_file' in project else None)
+        return project_list, project_geojson
 
     def get_sites(self, filters):
         sites = get_collection('sites', filters)

@@ -158,12 +158,8 @@ class ProjectViewById(APIView):
 
     def patch(self, request, project_id):
         with atomic():
-            base_url = "{0}://{1}".format(request.scheme, request.get_host())
             use_case = UpdateProjectUseCase(
-                base_url=base_url,
-                project_raw_data=request.data,
-                project_id=project_id
-            )
+                project_raw_data=request.data, project_id=project_id)
             return use_case.execute()
 
 

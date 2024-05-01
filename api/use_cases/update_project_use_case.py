@@ -1,5 +1,6 @@
 from api.helpers.http_responses import ok, error, not_found
 from fcea_monitoreo.utils import update_document, get_collection
+from fcea_monitoreo.settings import BASE_URL
 from api.serializers.project_serializer import ProjectSerializer
 from api.scripts.send_form_link import send_form_link
 from django.http import QueryDict
@@ -10,8 +11,7 @@ import os
 
 
 class UpdateProjectUseCase:
-    def __init__(self, base_url, project_raw_data, project_id):
-        self.base_url = base_url
+    def __init__(self, project_raw_data, project_id):
         self.project_raw_data = project_raw_data
         self.project_id = project_id
 
@@ -66,6 +66,6 @@ class UpdateProjectUseCase:
             return update_document(
                 'projects',
                 {'_id': ObjectId(self.project_id)},
-                {'geojson_file': f"{self.base_url}/{uploaded_file_url}"}
+                {'geojson_file': f"{BASE_URL}/{uploaded_file_url}"}
             )
         return []

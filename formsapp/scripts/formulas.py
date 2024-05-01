@@ -231,12 +231,14 @@ def get_sections(data):
 
 def get_tiempo(data):
     """Obtener el tiempo de recorrido"""
-    key_suffix = "tiempo_2"
+    T_PREFIX = "velocidad_de_corriente"
+    groups = []
     for key in data.keys():
-        if key_suffix in key:
-            value = _float(data, key)
-            if value:
-                return value
+        if T_PREFIX in key:
+            groups.append(data[key])
+    if len(groups) > 0:
+        avg = sum(groups)/len(groups)
+        return round(avg, 2)
     return None
 
 

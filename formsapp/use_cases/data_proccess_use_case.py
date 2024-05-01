@@ -1,5 +1,5 @@
 from formsapp.scripts.formsapp_parse import parse_data
-from api.helpers.http_responses import created, error
+from api.helpers.http_responses import ok, created, error
 from formsapp.scripts import formulas
 from fcea_monitoreo.utils import get_collection, insert_document, update_document
 from fcea_monitoreo.functions import get_altitude, get_geocode
@@ -20,7 +20,7 @@ class DataProccessUseCase:
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
-            return error(e.args[0]),
+            return error(e.args[0])
 
     def _insert_formsapp_raw_data(self, data):
         data['_id'] = self.site_id

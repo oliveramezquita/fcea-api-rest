@@ -263,7 +263,7 @@ def get_caudal(data):
             data["tiempo_recorrido_objeto"]
         total_area = sum(areas)
         flow = speed * total_area
-        return round(flow, 3)
+        return round(flow, 2)
     except Exception:
         return None
 

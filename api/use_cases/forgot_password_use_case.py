@@ -13,7 +13,8 @@ class ForgotPasswordUseCase:
 
     def execute(self):
         self.validate_params()
-        user = get_collection('users', {'email': self.raw_data['email']})
+        user = get_collection(
+            'users', {'email': self.raw_data['email'], '_deleted': False})
         if not user:
             return not_found(
                 f"Usuario no encontrado con el email: {self.raw_data['email']}"

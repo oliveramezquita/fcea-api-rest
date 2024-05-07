@@ -70,15 +70,3 @@ class Site(models.Model):
 
     class Meta:
         db_table = "sites"
-
-
-class Synchronization(models.Model):
-    id = models.AutoField(primary_key=True)
-    site_id = models.CharField(max_length=50)
-    scores_status = models.BooleanField(default=0)
-
-    def scores(self):
-        return bool(self.scores_status)
-
-    class Meta:
-        db_table = "synchronization"

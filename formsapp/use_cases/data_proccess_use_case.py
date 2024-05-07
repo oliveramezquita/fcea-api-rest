@@ -1,9 +1,9 @@
 from formsapp.scripts.formsapp_parse import parse_data
 from api.helpers.http_responses import ok, created, error
 from formsapp.scripts import formulas
-from fcea_monitoreo.utils import get_collection, insert_document, update_document
+from formsapp.scripts.sync.scores_calculation import scores_calculation
+from fcea_monitoreo.utils import get_collection, insert_document
 from fcea_monitoreo.functions import get_altitude, get_geocode
-from formsapp.tasks import data_synchronize
 from bson import ObjectId
 from dateutil import parser
 
@@ -111,11 +111,12 @@ class DataProccessUseCase:
             'nombre_sitio': mapped_data['nombre_sitio'],
             'project_id': mapped_data['project_id']
         })
-        data_synchronize(
-            data=mapped_data,
-            project_name=data.get('cuenca'),
-            site_reference_name=data.get('sitio_de_referencia')
-        )
+        scores_calculation(self.site_id)
+        # data_synchronize(
+        #     data=mapped_data,
+        #     project_name=data.get('cuenca'),
+        #     site_reference_name=data.get('sitio_de_referencia')
+        # )
 
     def _get_project(self, data):
         project = get_collection('projects', {'name': data.get('cuenca')})

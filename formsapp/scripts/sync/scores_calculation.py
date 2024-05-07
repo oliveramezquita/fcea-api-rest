@@ -1,4 +1,3 @@
-from formsapp.models import Synchronization
 from fcea_monitoreo.utils import get_collection, update_document
 from bson import ObjectId
 
@@ -6,50 +5,43 @@ _colors = get_collection('catalogs', {'name': 'Colores'})
 _interpretation = get_collection('catalogs', {'name': 'Evaluación'})
 
 
-def scores_calculation():
-    sites = get_collection('sites')
-    sync = list(Synchronization.objects.values())
+def scores_calculation(site_id):
+    site = get_collection('sites', {'_id': ObjectId(site_id)})[0]
 
-    for site in sites:
-        scores = {
-            'ph': None,
-            'water_temperature': None,
-            'saturation': None,
-            'turbidity': None,
-            'nitrates': None,
-            'ammonium': None,
-            'orthophosphates': None,
-            'macroinvertebrates_rating': calculate_biotic_grade(site['macroinvertebrados']),
-            'fecal_coliforms': calculate_coliforms_grade(site['coliformes_fecales']),
-            'ch': calculate_ch_grade(site['calidad_hidromorfologica']),
-            'cbr': calculate_cbr_grade(site['calidad_bosque_ribera']),
-        }
-        rfs = next(
-            (item for item in sites if item["_id"] == site['sitio_referencia_id']), None)
-        if rfs:
-            scores['ph'] = ph_calculation(site['ph'], rfs['ph'])
-            scores['water_temperature'] = water_temperature_calculation(
-                site['temperatura_agua'], rfs['temperatura_agua'])
-            scores['saturation'] = saturation_calculation(
-                site['oxigeno_disuelto'], rfs['oxigeno_disuelto'])
-            scores['turbidity'] = turbidity_calculation(
-                site['turbidez'], rfs['turbidez'])
-            scores['nitrates'] = nitrates_calculation(
-                site['nitratos'], rfs['nitratos'])
-            scores['ammonium'] = ammonium_calculation(
-                site['amonio'], rfs['amonio'])
-            scores['orthophosphates'] = orthophosphates_calculation(
-                site['ortofosfatos'], rfs['ortofosfatos'])
-        scores['total'] = total_score(scores)
-        scores['interpretation'] = set_interpretation(scores['total'])
+    scores = {
+        'ph': None,
+        'water_temperature': None,
+        'saturation': None,
+        'turbidity': None,
+        'nitrates': None,
+        'ammonium': None,
+        'orthophosphates': None,
+        'macroinvertebrates_rating': calculate_biotic_grade(site['macroinvertebrados']),
+        'fecal_coliforms': calculate_coliforms_grade(site['coliformes_fecales']),
+        'ch': calculate_ch_grade(site['calidad_hidromorfologica']),
+        'cbr': calculate_cbr_grade(site['calidad_bosque_ribera']),
+    }
+    rfs = get_collection(
+        'sites', {'_id': ObjectId(site['sitio_referencia_id'])})
+    if rfs:
+        scores['ph'] = ph_calculation(site['ph'], rfs[0]['ph'])
+        scores['water_temperature'] = water_temperature_calculation(
+            site['temperatura_agua'], rfs[0]['temperatura_agua'])
+        scores['saturation'] = saturation_calculation(
+            site['oxigeno_disuelto'], rfs[0]['oxigeno_disuelto'])
+        scores['turbidity'] = turbidity_calculation(
+            site['turbidez'], rfs[0]['turbidez'])
+        scores['nitrates'] = nitrates_calculation(
+            site['nitratos'], rfs[0]['nitratos'])
+        scores['ammonium'] = ammonium_calculation(
+            site['amonio'], rfs[0]['amonio'])
+        scores['orthophosphates'] = orthophosphates_calculation(
+            site['ortofosfatos'], rfs[0]['ortofosfatos'])
+    scores['total'] = total_score(scores)
+    scores['interpretation'] = set_interpretation(scores['total'])
 
-        if not next((item for item in sync if item["site_id"] == str(site['_id'])), None):
-            update_document('sites', {'_id': ObjectId(
-                site['_id'])}, {'scores': scores})
-            Synchronization.objects.create(
-                site_id=str(site['_id']),
-                scores_status=0,
-            )
+    update_document('sites', {'_id': ObjectId(
+        site['_id'])}, {'scores': scores})
 
 
 def ph_calculation(ph, ph_rfs):
@@ -215,9 +207,9 @@ def calculate_biotic_grade(macroinvertebrate_list):
 
 
 def calculate_coliforms_grade(coliforms):
-    score = 1
+    score = 3
     if not coliforms:
-        score = 3
+        score = 1
     return score, set_color(score)
 
 
@@ -285,7 +277,7 @@ def set_interpretation(score):
     if 'values' in _interpretation[0]:
         values = _interpretation[0]['values']
         for i, key in enumerate(values):
-            if i == score[1]:
-                return values[key]
+            if i + 1 == score[1]:
+                return key, values[key]
 
     return None

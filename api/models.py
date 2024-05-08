@@ -25,6 +25,8 @@ class Project(models.Model):
     _id = models.CharField(max_length=50)
     name = models.CharField(max_length=255)
     season = models.CharField(max_length=50)
+    year = models.CharField(max_length=4, null=True)
+    month = models.CharField(max_length=15, null=True)
     admin_users = models.JSONField(null=True)
     geojson_file = models.CharField(max_length=255, null=True)
     activated = models.BooleanField()

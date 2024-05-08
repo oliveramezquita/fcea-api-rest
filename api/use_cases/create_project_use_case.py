@@ -33,6 +33,16 @@ class CreateProjectUseCase:
                 "La temporada es obligatoria"
             )
 
+        if 'year' not in self.project_raw_data:
+            raise exceptions.ValidationError(
+                "El año es obligatorio"
+            )
+
+        if 'month' not in self.project_raw_data:
+            raise exceptions.ValidationError(
+                "El mes es obligatorio"
+            )
+
         if 'admin_users' not in self.project_raw_data:
             self.project_raw_data['admin_users'] = []
 
@@ -46,13 +56,15 @@ class CreateProjectUseCase:
     def insert(self):
         self.project_raw_data['_id'] = ObjectId()
         try:
-            Project.objects.create(
-                name=self.project_raw_data['name'], season=self.project_raw_data['season'])
+            # Project.objects.create(
+            #     name=self.project_raw_data['name'], season=self.project_raw_data['season'])
             return insert_document(
                 'projects',
                 self.project_raw_data,
                 {
                     'name': self.project_raw_data['name'],
+                    'year': self.project_raw_data['year'],
+                    'month': self.project_raw_data['month'],
                 })
         except Exception as e:
             return error(e.args[0])

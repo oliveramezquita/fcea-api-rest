@@ -14,6 +14,7 @@ class UpdateProjectUseCase:
     def __init__(self, project_raw_data, project_id):
         self.project_raw_data = project_raw_data
         self.project_id = project_id
+        self.geojson_file = None
 
     def execute(self):
         project = get_collection('projects', {
@@ -23,9 +24,11 @@ class UpdateProjectUseCase:
             return not_found(
                 f"No se encontró ningún proyecto con el id: {str(self.project_id)}"
             )
+        elif 'geojson_file' in project[0]:
+            self.geojson_file = project[0]['geojson_file']
         try:
             if isinstance(self.project_raw_data, QueryDict):
-                data = self.upload_geojson_file()
+                data = self.upload_query_dict_data()
             else:
                 data = self.update(project[0])
             return ok(ProjectSerializer(data).data)
@@ -46,6 +49,31 @@ class UpdateProjectUseCase:
             self.project_raw_data
         )
 
+    def upload_query_dict_data(self):
+        data = self.querydict_to_dict()
+        if 'geojson_file' in data:
+            del data['geojson_file']
+            self.upload_geojson_file()
+        else:
+            self.check_geojson_file()
+        if 'admin_users' in data:
+            data['admin_users'] = data['admin_users'].split(
+                ',') if data['admin_users'] != '' else []
+        return update_document(
+            'projects',
+            {'_id': ObjectId(self.project_id)},
+            data
+        )
+
+    def querydict_to_dict(self):
+        data = {}
+        for key in self.project_raw_data.keys():
+            v = self.project_raw_data.getlist(key)
+            if len(v) == 1:
+                v = v[0]
+            data[key] = v
+        return data
+
     def upload_geojson_file(self):
         if 'geojson_file' in self.project_raw_data:
             geojson_file = self.project_raw_data['geojson_file']
@@ -63,9 +91,17 @@ class UpdateProjectUseCase:
 
             filename = fs.save(geojson_file.name, geojson_file)
             uploaded_file_url = fs.url(filename)
-            return update_document(
+            update_document(
                 'projects',
                 {'_id': ObjectId(self.project_id)},
                 {'geojson_file': f"{BASE_URL}/{uploaded_file_url}"}
             )
         return []
+
+    def check_geojson_file(self):
+        if self.geojson_file:
+            update_document(
+                'projects',
+                {'_id': ObjectId(self.project_id)},
+                {'geojson_file': None}
+            )

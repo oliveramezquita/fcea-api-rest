@@ -1,55 +1,69 @@
 {
     "faqs": [
         {
-            "faqTitle": "Cuencas",
+            "faqTitle": "Monitoreo Comunitario del Agua",
             "faqIcon": "tabler-map-star",
-            "faqSubtitle": "¿Qué necesitas saber acerca de las cuencas?",
+            "faqSubtitle": "En esta sección puedes encontrar nociones generales sobre el esquema del monitoreo comunitario del agua.",
             "faqs": [
                 {
-                    "question": "¿Qué es el monitoreo comunitario del agua?",
-                    "answer": "Parte de la superficie terrestre cuyas aguas fluyen hacia un mismo río o lago."
-                },
-                {
                     "question": "¿Cómo se realiza la evaluación?",
-                    "answer": "Solo el personal del Fondo para la Comunicación y la Educación Ambiental pueden dar de alta nuevas cuencas."
+                    "answer": [
+                        "El Monitoreo Comunitario del Agua se basa en el enfoque de la calidad ecológica, una aproximación para el estudio de los ecosistemas acuáticos que busca conocer qué elementos lo componen (vivos y no vivos), cómo funciona y si esto permite mantener tanto los procesos naturales como los beneficios para las personas o también llamados servicios ecosistémicos.",
+                        "La evaluación requiere el análisis periódico de la calidad del agua, del paisaje y de ciertos seres vivos acuáticos para conocer la salud del ecosistema acuático. De tal manera, los parámetros se integran en tres grandes grupos: físico-químicos, paisajísticos y biológicos."
+                    ]
                 },
                 {
-                    "question": "¿Qué es un sitio de referencia y un sitio de interés?",
-                    "answer": "For any technical difficulties you are experiencing with our website, please contact us at our support portal, or you can call us toll-free at 1-000-000-000, or email us at order@companymail.com"
+                    "question": "¿Qué es un sitio de referencia y un sitio de evaluación?",
+                    "answer": [
+                        "Ante la gran diversidad de condiciones climáticas y ambientales que existen en las diversas cuencas de México, resulta inadecuado unificar los valores aceptables para los parámetros evaluados. Ante ello, una estrategia para realizar comparaciones válidas consiste en reconocer las características en sitios poco perturbados para establecer condiciones de referencia (condiciones naturales de la cuenca).",
+                        "Por ello, se requiere establecer un sitio de referencia para poder comparar los valores de los sitios de evaluación, que son aquellos donde se tiene el interés de conocer la calidad ecológica.  De modo que el análisis se basa en la magnitud de cambio de los parámetros en los sitios de evaluación respecto al sitio de referencia."
+                    ]
                 },
                 {
-                    "question": "¿Cómo puedo ver los resultados del monitoreo?",
-                    "answer": "If you have paying users or you are developing any SaaS products then you need an Extended License. For each products, you need a license. You can get free lifetime updates as well."
+                    "question": "¿Cómo puedo ver los resultados del monitoreo comunitario?",
+                    "answer": [
+                        "Una vez que las y los brigadistas capturen los resultados de los monitoreos en los formatos de campo digitales, los resultados podrán visualizarse en la sección <a href='https://calidadagua.mx/monitoreo-comunitario/' target='_blank'>“Mapa colaborativo”</a> dentro de la plataforma del monitoreo comunitario del agua. Aquí encontrarás un análisis espacial e histórico de la calidad ecológica registrada en los sitios, así como de cada uno de los parámetros físico-químicos, paisajísticos y biológicos evaluados."
+                    ]
                 }
             ]
         },
         {
             "faqTitle": "Usuarios",
             "faqIcon": "tabler-users",
-            "faqSubtitle": "¿Qué necesitas saber de los usuarios?",
+            "faqSubtitle": "En esta sección puedes encontrar información sobre las principales funciones y responsabilidades de las personas involucradas en el monitoreo comunitario del agua.",
             "faqs": [
                 {
-                    "question": "¿Qué tipos de usuarios hay?",
-                    "answer": "Administrador y Brigadista"
+                    "question": "¿Cuántos tipo de usuarios hay?",
+                    "answer": [
+                        "Dos tipos: usuario administrador y usuario brigadista."
+                    ]
                 },
                 {
-                    "question": "¿Qué puede hacer un usuario administrador?",
-                    "answer": "The cost of scheduled delivery is $69 or $99 per order, depending on the destination postal code. The parcel delivery is free."
+                    "question": "¿Cuáles son las responsabilidades de un usuario administrador?",
+                    "answer": [
+                        "El usuario administrador es la persona encargada de organizar el plan de monitoreo en la cuenca; determinar los sitios de referencia y de evaluación, asignar a las personas responsables de la captura de los datos y vincular los formatos de campo digitales (tanto del sitio de referencia como de los sitios de evaluación)."
+                    ]
                 },
                 {
-                    "question": "¿Qué puede hacer un usuario brigadista?",
-                    "answer": "We will promptly replace any product that is damaged in transit. Just contact our support team, to notify us of the situation within 48 hours of product arrival."
+                    "question": "¿Cuáles son las responsabilidades de un usuario brigadista?",
+                    "answer": [
+                        "El usuario brigadista es la persona encargada de capturar los resultados del monitoreo mediante los formatos de campo digitales, tanto para el sitio de referencia como para los de evaluación."
+                    ]
                 }
             ]
         },
         {
             "faqTitle": "Formato de campo",
             "faqIcon": "tabler-notes",
-            "faqSubtitle": "¿Qué necesitas saber de los formatos de campo?",
+            "faqSubtitle": "¿Qué necesitas saber de los formatos de campo digital?",
             "faqs": [
                 {
-                    "question": "¿Qué es un formato de campo?",
-                    "answer": "Es un formulario en línea para capturar la información del sitio de referencia o sitio de interés."
+                    "question": "¿Qué es un formato de campo digital?",
+                    "answer": [
+                        "Los formatos de campo digitales son herramientas para la captura de los resultados del monitoreo de parámetros físico-químicos, biológicos y paisajísticos. Existen dos tipos de formatos digitales; uno para el sitio de referencia y otro para los sitios de evaluación.",
+                        "Para poder acceder a una interpretación de los resultados, un primer paso es contar con los datos del sitio de referencia, por tal, se deberá de seguir la siguiente ruta de captura:",
+                        "<img src='http://localhost:5173/src/assets/images/RutaCapturaFormatoDeCampo.jpg' alt='Ruta para la captura de los resultados en los formatos de campo digitales' width='100%'>"
+                    ]
                 }
             ]
         }

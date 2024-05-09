@@ -62,14 +62,12 @@ class GetSitesUseCase:
             if sites:
                 states = list(set(p['estado'] for p in sites))
                 institution = list(set(p['institucion'] for p in sites))
-                sites = list(set(p['nombre_sitio'] for p in sites))
                 resp = {
                     'default_project': str(projects[index]['value']),
                     'geojson_data': geojson_data[index],
                     'projects': projects,
                     'states': states,
                     'institution': institution,
-                    'sites': sites
                 }
                 return HttpResponse(json.dumps(resp), content_type='application/json')
             return not_found("No existen filtros actualmente")
@@ -88,6 +86,7 @@ class GetSitesUseCase:
                     {'value': str(project['_id']), 'title': project['name']})
             project_geojson.append(
                 project['geojson_file'] if 'geojson_file' in project else None)
+
         return project_list, project_geojson
 
     def get_sites(self, filters):

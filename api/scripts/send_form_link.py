@@ -37,7 +37,7 @@ def parse_url(project, email, site_type):
 
     params = {}
     params[keys_list[0]] = email
-    params[keys_list[1]] = project['name']
+    params[keys_list[1]] = project['_id']
     if site_type == 'its_data':
         params[keys_list[2]] = reference_site_name(project)
 

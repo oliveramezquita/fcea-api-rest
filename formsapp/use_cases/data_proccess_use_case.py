@@ -27,7 +27,6 @@ class DataProccessUseCase:
         insert_document('formsapp_raw_data', data, {'_id': self.site_id})
 
     def _insert_site(self, data):
-        project = self._get_project(data)
         city, state = get_geocode(
             float(data.get('ubicacion_del_sitio_de_monitoreo/latitud')),
             float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
@@ -35,8 +34,7 @@ class DataProccessUseCase:
         user_id, institution = self._get_user(data.get('correo_electronico'))
         mapped_data = {}
         mapped_data['_id'] = ObjectId(self.site_id)
-        mapped_data['project_id'] = ObjectId(project['_id']) if project else data.get(
-            'cuenca')
+        mapped_data['project_id'] = ObjectId(data.get('cuenca'))
         mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
@@ -117,12 +115,6 @@ class DataProccessUseCase:
         #     project_name=data.get('cuenca'),
         #     site_reference_name=data.get('sitio_de_referencia')
         # )
-
-    def _get_project(self, data):
-        project = get_collection('projects', {'name': data.get('cuenca')})
-        if not project:
-            return None
-        return project[0]
 
     def _get_user(self, email):
         user = get_collection(

@@ -30,3 +30,10 @@ class Project(models.Model):
     admin_users = models.JSONField(null=True)
     geojson_file = models.CharField(max_length=255, null=True)
     activated = models.BooleanField()
+
+
+class Basin(models.Model):
+    _id = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    geojson_file = models.CharField(max_length=255, null=True)
+    institutions = models.JSONField(null=True)

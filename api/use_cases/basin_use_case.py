@@ -5,6 +5,7 @@ from fcea_monitoreo.settings import BASE_URL
 from django.core.files.storage import FileSystemStorage
 from rest_framework import exceptions
 from bson import ObjectId
+from PIL import Image
 import os
 
 
@@ -34,6 +35,7 @@ class BasinUseCase:
     def _insert(self):
         self.basin_data['_id'] = ObjectId()
         self.basin_data['geojson_file'] = self._upload_geojson_file()
+        self.basin_data['_deleted'] = False
         return insert_document(
             'basins',
             self.basin_data,
@@ -44,15 +46,16 @@ class BasinUseCase:
 
     def get(self):
         try:
+            filters = {'_deleted': False}
             if self.basin_id:
-                filters = {'_id': ObjectId(self.basin_id)}
+                filters['_id'] = ObjectId(self.basin_id)
                 basin = get_collection('basins', filters)
                 if not basin:
                     return not_found(
                         f"Ninguna cuenca encontrada con el id: {str(self.basin_id)}"
                     )
                 return ok(BasinSerializer(basin[0]).data)
-            basins = get_collection('basins')
+            basins = get_collection('basins', filters)
             return ok(BasinSerializer(basins, many=True).data)
         except Exception as e:
             return error(e.args[0])
@@ -61,7 +64,8 @@ class BasinUseCase:
         if '_id' in self.basin_data:
             del self.basin_data['_id']
         basin = get_collection('basins', {
-            '_id': ObjectId(self.basin_id)
+            '_id': ObjectId(self.basin_id),
+            '_deleted': False,
         })
         if not basin:
             return not_found(
@@ -86,7 +90,8 @@ class BasinUseCase:
 
     def _check_geojson_file(self):
         basin = get_collection('basins', {
-            '_id': ObjectId(self.basin_id)
+            '_id': ObjectId(self.basin_id),
+            '_deleted': False,
         })
         if basin and basin[0]['geojson_file']:
             update_document(
@@ -130,12 +135,18 @@ class BasinUseCase:
                 "El nombre de la institución es obligatorio"
             )
         basin = get_collection('basins', {
-            '_id': ObjectId(self.basin_id)
+            '_id': ObjectId(self.basin_id),
+            '_deleted': False
         })
         if not basin:
             return not_found(
                 f"Ninguna cuenca encontrada con el id: {str(self.basin_id)}"
             )
+        if 'delete' in self.basin_data and self.basin_data['delete'] == 'true':
+            data = self._delete_institution(
+                basin[0], self.basin_data['name'])
+            return ok(BasinSerializer(data).data)
+        basin[0] = self._check_institution(basin[0], self.basin_data['name'])
         self.basin_data['logo'] = self._upload_logo()
         try:
             basin[0]['institutions'].append(
@@ -162,13 +173,59 @@ class BasinUseCase:
             if os.path.exists(filename):
                 os.remove(filename)
 
-            ext = os.path.splitext(logo.name)[1]
-            # if not ext.lower() in ['.geojson']:
+            # TODO: Check validation of svg extension
+            # if not self._is_valid_image_pillow(filename):
             #     raise exceptions.ValidationError(
-            #         "El archivo no tiene el formato GeoJSON"
+            #         "El logotipo debe ser una imagen valida"
             #     )
 
             filename = fs.save(logo.name, logo)
             uploaded_logo_url = fs.url(filename)
             return f"{BASE_URL}/{uploaded_logo_url}"
         return None
+
+    def _check_institution(self, basin, name_institution):
+        index = next((index for (index, i) in enumerate(
+            basin['institutions']) if i["name"] == name_institution), None)
+        if isinstance(index, int) and index >= 0:
+            del basin['institutions'][index]
+        return basin
+
+    def _is_valid_image_pillow(self, file_name):
+        try:
+            with Image.open(file_name) as img:
+                img.verify()
+                return True
+        except (IOError, SyntaxError):
+            return False
+
+    def _delete_institution(self, basin, name_institution):
+        index = next((index for (index, i) in enumerate(
+            basin['institutions']) if i["name"] == name_institution), None)
+        if index >= 0:
+            del basin['institutions'][index]
+            return update_document(
+                'basins',
+                {'_id': ObjectId(self.basin_id)},
+                {'institutions': basin['institutions']}
+            )
+        return basin
+
+    def delete(self):
+        basin = get_collection('basins', {
+            '_id': ObjectId(self.basin_id),
+            '_deleted': False,
+        })
+        if not basin:
+            return not_found(
+                f"Ninguna cuenca encontrada con el id: {str(self.basin_id)}"
+            )
+        try:
+            update_document(
+                'basins',
+                {'_id': ObjectId(self.basin_id)},
+                {'_deleted': True}
+            )
+            return ok(['Cuenca eliminada exitosamente'])
+        except Exception as e:
+            return error(e.args[0])

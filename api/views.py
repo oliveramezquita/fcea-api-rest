@@ -218,6 +218,10 @@ class BasinViewById(APIView):
             use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
             return use_case.patch()
 
+    def delete(self, request, basin_id):
+        use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
+        return use_case.delete()
+
 
 class FaqsView(APIView):
     def get(self, request):

@@ -47,7 +47,6 @@ class AssignProjectUseCase:
 
     def match_projects(self, project):
         project[self.site_type]['url_form'] = self.project_raw_data[self.site_type]['url_form']
-
         if 'users' in project[self.site_type] and len(project[self.site_type]['users']) > 0:
             s = set(project[self.site_type]['users'])
             self.new_users = [

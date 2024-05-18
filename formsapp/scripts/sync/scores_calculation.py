@@ -263,7 +263,7 @@ def total_score(scores):
     elif total >= 36 and total <= 46:
         grade = 4
         score = 2
-    return score, grade, set_color(grade)
+    return score, grade, set_color(grade), (100-total)
 
 
 def set_color(score):

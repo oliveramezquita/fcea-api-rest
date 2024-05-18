@@ -2,7 +2,6 @@ from rest_framework import exceptions
 from fcea_monitoreo.utils import insert_document
 from api.helpers.http_responses import created, bad_request, error
 from bson import ObjectId
-from formsapp.models import Project
 
 
 class CreateProjectUseCase:
@@ -16,10 +15,10 @@ class CreateProjectUseCase:
         self.validate_params()
         if self.insert():
             try:
-                return created(['El proyecto ha sido creado correctamente'])
+                return created(['El monitoreo ha sido creado correctamente'])
             except Exception as e:
                 return error(e.args[0])
-        return bad_request('El proyecto ya existe')
+        return bad_request('El monitoreo ya existe')
 
     def validate_params(self):
         # validate requiere fields
@@ -56,14 +55,13 @@ class CreateProjectUseCase:
     def insert(self):
         self.project_raw_data['_id'] = ObjectId()
         try:
-            # Project.objects.create(
-            #     name=self.project_raw_data['name'], season=self.project_raw_data['season'])
             return insert_document(
                 'projects',
                 self.project_raw_data,
                 {
                     'name': self.project_raw_data['name'],
-                    'year': self.project_raw_data['year'],
+                    'season': self.project_raw_data['season'],
+                    'year': int(self.project_raw_data['year']),
                     'month': self.project_raw_data['month'],
                 })
         except Exception as e:

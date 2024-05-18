@@ -59,6 +59,8 @@ class UpdateProjectUseCase:
         if 'admin_users' in data:
             data['admin_users'] = data['admin_users'].split(
                 ',') if data['admin_users'] != '' else []
+        if 'year' in data:
+            data['year'] = int(data['year'])
         return update_document(
             'projects',
             {'_id': ObjectId(self.project_id)},

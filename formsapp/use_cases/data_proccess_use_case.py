@@ -1,5 +1,5 @@
 from formsapp.scripts.formsapp_parse import parse_data
-from api.helpers.http_responses import ok, created, error
+from api.helpers.http_responses import created, error
 from formsapp.scripts import formulas
 from formsapp.scripts.sync.scores_calculation import scores_calculation
 from fcea_monitoreo.utils import get_collection, insert_document
@@ -32,9 +32,12 @@ class DataProccessUseCase:
             float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
         )
         user_id, institution = self._get_user(data.get('correo_electronico'))
+        project = get_collection(
+            'projects', {'_id': ObjectId(data.get('proyecto'))})
         mapped_data = {}
         mapped_data['_id'] = ObjectId(self.site_id)
-        mapped_data['project_id'] = ObjectId(data.get('cuenca'))
+        mapped_data['project_id'] = ObjectId(data.get('proyecto'))
+        mapped_data['cuenca'] = data.get('cuenca')
         mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
@@ -57,6 +60,8 @@ class DataProccessUseCase:
             data, 'selecciona_el_tipo_de_cuerpo_de_agua')
         mapped_data['fecha'] = parser.isoparse(data.get('fecha_del_monitoreo'))
         mapped_data['temporada'] = data.get('temporada')
+        mapped_data['anio'] = project[0]['year']
+        mapped_data['mes'] = project[0]['month']
         mapped_data['fotografia1'] = data.get(
             'fotografia_1')[0] if data.get('fotografia_1') else None
         mapped_data['fotografia2'] = data.get(
@@ -110,11 +115,6 @@ class DataProccessUseCase:
             'project_id': mapped_data['project_id']
         })
         scores_calculation(self.site_id)
-        # data_synchronize(
-        #     data=mapped_data,
-        #     project_name=data.get('cuenca'),
-        #     site_reference_name=data.get('sitio_de_referencia')
-        # )
 
     def _get_user(self, email):
         user = get_collection(

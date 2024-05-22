@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from formsapp.use_cases.data_proccess_use_case import DataProccessUseCase
 from formsapp.use_cases.get_raw_data_use_case import GetRawDataUseCase
+from formsapp.use_cases.get_scores_calculation_use_case import GetScoresCalculationUseCase
 from django.db.transaction import atomic
 
 
@@ -14,4 +15,10 @@ class DataProccessView(APIView):
 class RawDataView(APIView):
     def get(self, request, index):
         use_case = GetRawDataUseCase(index=index)
+        return use_case.execute()
+
+
+class ScoreSynchronizationView(APIView):
+    def get(self, request):
+        use_case = GetScoresCalculationUseCase()
         return use_case.execute()

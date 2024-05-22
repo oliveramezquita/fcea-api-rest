@@ -23,7 +23,7 @@ class CreateCatalogUseCase:
         # validate requiere fields
         if 'name' not in self.catalog_raw_data:
             raise exceptions.ValidationError(
-                "El correo electrónico es obligatorio"
+                "El nombre del catálogo es obligatorio"
             )
 
         if 'type' not in self.catalog_raw_data:

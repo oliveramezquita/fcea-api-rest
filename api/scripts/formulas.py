@@ -16,7 +16,6 @@ def format_date(datetime_str, format):
 
 
 def generate_objectid(string):
-    import hashlib
     m = hashlib.md5()
     string = string.encode('utf-8')
     m.update(string)

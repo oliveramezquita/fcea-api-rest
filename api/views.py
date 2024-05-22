@@ -20,6 +20,7 @@ from api.use_cases.create_project_use_case import CreateProjectUseCase
 from api.use_cases.assign_project_use_case import AssignProjectUseCase
 from api.use_cases.get_faqs_use_case import GetFaqsUseCase
 from api.use_cases.get_sites_use_case import GetSitesUseCase
+from api.use_cases.basin_use_case import BasinUseCase
 from .middlewares import FceaAuthenticationMiddleware
 from django.db.transaction import atomic
 
@@ -185,6 +186,41 @@ class ResetPasswordOutsideView(APIView):
     def post(self, request):
         reset_password_use_case = ResetPasswordUseCase(raw_data=request.data)
         return reset_password_use_case.reset_password_outside()
+
+
+class BasinsView(APIView):
+    authentication_classes = [FceaAuthenticationMiddleware]
+
+    def post(self, request):
+        with atomic():
+            use_case = BasinUseCase(request.data)
+            return use_case.create()
+
+    def get(self, request):
+        use_case = BasinUseCase(request.data)
+        return use_case.get()
+
+
+class BasinViewById(APIView):
+    authentication_classes = [FceaAuthenticationMiddleware]
+
+    def get(self, request, basin_id):
+        use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
+        return use_case.get()
+
+    def put(self, request, basin_id):
+        with atomic():
+            use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
+            return use_case.put()
+
+    def patch(self, request, basin_id):
+        with atomic():
+            use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
+            return use_case.patch()
+
+    def delete(self, request, basin_id):
+        use_case = BasinUseCase(basin_data=request.data, basin_id=basin_id)
+        return use_case.delete()
 
 
 class FaqsView(APIView):

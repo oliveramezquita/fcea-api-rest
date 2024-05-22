@@ -28,6 +28,8 @@ urlpatterns = [
          name="public-sites"),
     path('site-filters', views.SiteFiltersView.as_view(),
          name="site-filters"),
+    path('basins', views.BasinsView.as_view(), name="basins-view"),
+    path('basin/<str:basin_id>', views.BasinViewById.as_view(), name="basin-by-id"),
     path('faqs', views.FaqsView.as_view(), name="faqs-view"),
     path('test-data', views.TestDataView.as_view(), name="test-data"),
 ]

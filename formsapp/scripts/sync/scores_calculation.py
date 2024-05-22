@@ -6,8 +6,11 @@ _interpretation = get_collection('catalogs', {'name': 'Evaluación'})
 
 
 def scores_calculation(site_id):
+    print('----------------site_id---------------')
+    print(site_id)
     site = get_collection('sites', {'_id': ObjectId(site_id)})[0]
-
+    print('----------------site------------------')
+    print(site)
     scores = {
         'ph': None,
         'water_temperature': None,
@@ -39,7 +42,10 @@ def scores_calculation(site_id):
             site['ortofosfatos'], rfs[0]['ortofosfatos'])
     scores['total'] = total_score(scores)
     scores['interpretation'] = set_interpretation(scores['total'])
-
+    print('----------------site["id"]------------------')
+    print(site['_id'])
+    print('----------------scores------------------')
+    print(scores)
     update_document('sites', {'_id': ObjectId(
         site['_id'])}, {'scores': scores})
 

@@ -41,6 +41,7 @@ class BasinUseCase:
             self.basin_data,
             {
                 'name': self.basin_data['name'],
+                '_deleted': False,
             }
         )
 

@@ -152,6 +152,7 @@ class BasinUseCase:
             basin[0]['institutions'].append(
                 {
                     'name': self.basin_data['name'],
+                    'url': self.basin_data['url'],
                     'logo': self.basin_data['logo'],
                 }
             )

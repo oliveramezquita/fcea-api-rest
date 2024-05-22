@@ -63,7 +63,7 @@ class GetSitesUseCase:
             index = next((index for (index, p) in enumerate(
                 projects) if p["name"] == self.project and p["year"] == self.year and p["month"] == self.month and p["season"] == self.season), 0)
             sites = get_collection(
-                'sites', {'cuenca': projects[index]['name']})
+                'sites', {'cuenca': projects[index]['name']}) if len(projects) > 0 else []
             if sites:
                 states = list(set(p['estado'] for p in sites))
                 institution = list(set(p['institucion'] for p in sites))

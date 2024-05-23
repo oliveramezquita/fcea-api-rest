@@ -41,7 +41,7 @@ class DataProccessUseCase:
         mapped_data['es_sitio_referencia'] = formulas.get_es_sitio_de_referencia(data.get(
             'es_sitio_de_referencia'))
         mapped_data['sitio_referencia_id'] = self._get_sitio_de_referencias(
-            data)
+            data, project[0]['year'], project[0]['month'])
         mapped_data['user_id'] = ObjectId(user_id)
         mapped_data['institucion'] = institution
         mapped_data['brigadistas'] = data.get(
@@ -128,10 +128,12 @@ class DataProccessUseCase:
             return email
         return user[0]['_id'], user[0]['institution']
 
-    def _get_sitio_de_referencias(self, data):
+    def _get_sitio_de_referencias(self, data, year, month):
         sitio = get_collection(
             'sites', {
                 'nombre_sitio': data.get('sitio_de_referencia'),
+                'anio': year,
+                'mes': month,
                 'temporada': data.get('temporada'),
                 'es_sitio_referencia': True
             }

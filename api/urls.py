@@ -30,6 +30,8 @@ urlpatterns = [
          name="site-filters"),
     path('basins', views.BasinsView.as_view(), name="basins-view"),
     path('basin/<str:basin_id>', views.BasinViewById.as_view(), name="basin-by-id"),
+    path('historical-graphs/<str:basin>',
+         views.HistoricalGraphsView.as_view(), name="historical-graphs"),
     path('faqs', views.FaqsView.as_view(), name="faqs-view"),
     path('test-data', views.TestDataView.as_view(), name="test-data"),
 ]

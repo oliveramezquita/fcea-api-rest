@@ -60,8 +60,8 @@ class GetSitesUseCase:
     def get_site_filters(self):
         try:
             projects, monitoring_periods = self.get_filter_projects()
-            index = next((index for (index, p) in enumerate(
-                projects) if p["name"] == self.project and p["year"] == self.year and p["month"] == self.month and p["season"] == self.season), 0)
+            index = next((idx for idx, p in enumerate(
+                projects) if p["name"] == self.project and p["year"] == int(self.year) and p["month"] == self.month and p["season"] == self.season), 0)
             sites = get_collection(
                 'sites', {'cuenca': projects[index]['name']}) if len(projects) > 0 else []
             if sites:
@@ -73,7 +73,8 @@ class GetSitesUseCase:
                         'name': projects[index]['name'],
                         'monitoring_period': monitoring_periods[index],
                         'season': projects[index]['season'],
-                        'geojson_data': self._get_geojson_file(projects[index]['name'])
+                        'geojson_data': self._get_geojson_file(projects[index]['name']),
+                        'institutions': self.get_institutions(projects[index]['name'], projects[index]['institutions']) if 'institutions' in projects[index] else [],
                     },
                     'projects': self.get_disctint_projects(projects),
                     'monitoring_periods': self.get_filter_by_project(projects[index]['name']),
@@ -158,3 +159,15 @@ class GetSitesUseCase:
                 'oxigeno_disuelto': sitio_referencia[0]['oxigeno_disuelto'],
             }
         return None
+
+    def get_institutions(self, basin_name, institutions):
+        data = []
+        basin = get_collection('basins', {'name': basin_name})
+        if basin and 'institutions' in basin[0]:
+            institution_list = institutions.split(',')
+            for institution in institution_list:
+                inst = next(
+                    (i for i in basin[0]['institutions'] if i['name'] == institution), None)
+                if inst:
+                    data.append(inst)
+        return data

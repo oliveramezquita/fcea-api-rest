@@ -21,6 +21,7 @@ from api.use_cases.assign_project_use_case import AssignProjectUseCase
 from api.use_cases.get_faqs_use_case import GetFaqsUseCase
 from api.use_cases.get_sites_use_case import GetSitesUseCase
 from api.use_cases.basin_use_case import BasinUseCase
+from api.use_cases.historical_graphs_use_case import HistoricalGraphsUseCase
 from .middlewares import FceaAuthenticationMiddleware
 from django.db.transaction import atomic
 
@@ -226,6 +227,12 @@ class BasinViewById(APIView):
 class FaqsView(APIView):
     def get(self, request):
         use_case = GetFaqsUseCase()
+        return use_case.execute()
+
+
+class HistoricalGraphsView(APIView):
+    def get(self, request, basin):
+        use_case = HistoricalGraphsUseCase(request, basin)
         return use_case.execute()
 
 

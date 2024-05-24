@@ -38,9 +38,9 @@ def get_collection(collection, filter=None, sort_by=None, order_by=None):
     return list(data)
 
 
-def distinct_collection(collection, value):
+def distinct_collection(collection, value, filter=None):
     collection_handle = _get_collection_handle(collection)
-    return list(collection_handle.distinct(value))
+    return list(collection_handle.distinct(value, filter))
 
 
 def insert_document(collection, data, filter=None):

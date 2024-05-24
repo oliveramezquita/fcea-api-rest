@@ -60,7 +60,7 @@ def ph_calculation(ph, ph_rfs):
 
 def water_temperature_calculation(temperature, temperature_rfs):
     if temperature < temperature_rfs:
-        return 1
+        return 1, set_color(1)
     ratio = temperature_rfs / temperature
     score = 0
     if ratio >= 0.8:
@@ -110,7 +110,7 @@ def turbidity_calculation(turbidity, turbidity_rfs):
 
 def nitrates_calculation(nitrates, nitrates_rfs):
     if nitrates < nitrates_rfs:
-        return 1
+        return 1, set_color(1)
     magnitudes = (nitrates - nitrates_rfs) / 0.2
     score = 0
     if magnitudes <= 0:
@@ -158,7 +158,7 @@ def get_positions_difference(ammonium, ammonium_rfs):
 
 def orthophosphates_calculation(orthophosphates, orthophosphates_rfs):
     if orthophosphates < orthophosphates_rfs:
-        return 1
+        return 1, set_color(1)
     magnitudes = (orthophosphates - orthophosphates_rfs) / 0.2
     score = 0
     if magnitudes <= 0:

@@ -19,6 +19,7 @@ django-mail-templated==2.6.5
 django-timezone-field==6.1.0
 djangorestframework==3.14.0
 dnspython==2.6.1
+et-xmlfile==1.1.0
 filelock==3.13.4
 h11==0.14.0
 idna==3.6
@@ -26,6 +27,7 @@ importlib-metadata==7.0.1
 kombu==4.6.11
 Markdown==3.5.2
 mysqlclient==2.2.4
+openpyxl==3.1.2
 pillow==10.3.0
 prompt-toolkit==3.0.43
 pycryptodome==3.20.0

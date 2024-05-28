@@ -4,7 +4,11 @@ from urllib.parse import parse_qs
 from django.http import HttpResponse
 from bson import ObjectId
 from datetime import datetime, timedelta
+from api.constants import IGNORE_KEYS, ARRAYS_VALUES
+from fcea_monitoreo.settings import BASE_URL
 import json
+import openpyxl
+import time
 
 
 class GetSitesUseCase:
@@ -47,6 +51,7 @@ class GetSitesUseCase:
                         filters['fecha'] = self.filter_by_dates()
             sites = self.get_sites(filters) if len(filters) > 0 else []
             if len(sites) > 0:
+                self.create_xls_file(sites)
                 return HttpResponse(json.dumps(sites), content_type='application/json')
             return not_found("No existen sitios dados de alta hasta el momento")
         except Exception as e:
@@ -75,6 +80,7 @@ class GetSitesUseCase:
                         'season': projects[index]['season'],
                         'geojson_data': self._get_geojson_file(projects[index]['name']),
                         'institutions': self.get_institutions(projects[index]['name'], projects[index]['institutions']) if 'institutions' in projects[index] else [],
+                        'excel_file': f"{BASE_URL}/media/files/{projects[index]['name']}_{projects[index]['season']}{str(monitoring_periods[index]).replace(' ','')}.xlsx",
                     },
                     'projects': self.get_disctint_projects(projects),
                     'monitoring_periods': self.get_filter_by_project(projects[index]['name']),
@@ -171,3 +177,64 @@ class GetSitesUseCase:
                 if inst:
                     data.append(inst)
         return data
+
+    def create_xls_file(self, sites):
+        header = self._get_key_list(sites)
+        wb = openpyxl.Workbook()
+        sheet = wb.active
+        sheet.append(header)
+        filename = ''
+        for idx, s in enumerate(sites):
+            column = 1
+            row = idx + 2
+            filename = f'{s["cuenca"]}_{s["temporada"]}{s["mes"]}{s["anio"]}'
+            for key, value in s.items():
+                if key in ARRAYS_VALUES:
+                    v = ''
+                    if key == 'macroinvertebrados':
+                        v = ', '.join(
+                            f'{m["familia"]}: {m["puntaje"]}' for m in value)
+                    if key == 'secciones':
+                        v = ', '.join(
+                            f'ancho: {s["width"]} - profundidad: {s["depth"]}' for s in value)
+                    if key == 'archivos_adjuntos':
+                        v = ', '.join(aa for aa in value)
+                    sheet.cell(row=row, column=column, value=v)
+                    column = column + 1
+                elif key not in IGNORE_KEYS:
+                    if key == 'user_id':
+                        sheet.cell(row=row, column=column,
+                                   value=self._get_user_name(value))
+                    elif key == 'sitio_referencia_id':
+                        v = next(
+                            (srf['nombre_sitio'] for srf in sites if srf['_id'] == value), 'N/A')
+                        sheet.cell(row=row, column=column, value=v)
+                    else:
+                        sheet.cell(row=row, column=column, value=value)
+                    column = column + 1
+                if key == 'scores':
+                    sheet.cell(row=row, column=column,
+                               value=value['total'][3])
+                    sheet.cell(row=row, column=column+1,
+                               value=value['interpretation'][0])
+                    sheet.cell(row=row, column=column+2,
+                               value=value['interpretation'][1])
+
+        wb.save(f'media/files/{filename}.xlsx')
+
+    def _get_key_list(self, sites):
+        list_keys = []
+        for s in sites:
+            for key, _ in s.items():
+                if key not in IGNORE_KEYS and key not in list_keys:
+                    list_keys.append(key)
+        list_keys.append('puntaje')
+        list_keys.append('calidad_general')
+        list_keys.append('mensaje')
+        return list_keys
+
+    def _get_user_name(self, user_id):
+        user = get_collection('users', {'_id': ObjectId(user_id)})
+        if user:
+            return f'{user[0]["name"]} {user[0]["last_name"]}'
+        return ''

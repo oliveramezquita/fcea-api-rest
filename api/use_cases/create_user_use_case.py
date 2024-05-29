@@ -52,13 +52,10 @@ class CreateUserUseCase:
 
     def insert(self):
         self.user_raw_data['_id'] = ObjectId()
-        return insert_document(
-            'users',
-            self.user_raw_data,
-            {
-                'email': self.user_raw_data['email'],
-                '_deleted': False,
-            })
+        return insert_document('users', self.user_raw_data, {
+            'email': self.user_raw_data['email'],
+            '_deleted': False,
+        })
 
     def send_link(self):
         key = parse.quote_plus(encrypt(str(self.user_raw_data['_id'])))

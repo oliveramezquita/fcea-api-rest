@@ -117,13 +117,11 @@ class DataProccessUseCase:
         scores_calculation(self.site_id)
 
     def _get_user(self, email):
-        user = get_collection(
-            'users',
-            {
-                'email': email,
-                'activated': True
-            }
-        )
+        user = get_collection('users', {
+            'email': email,
+            'activated': True,
+            '_deleted': False,
+        })
         if not user:
             return email
         return user[0]['_id'], user[0]['institution']

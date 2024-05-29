@@ -16,10 +16,7 @@ class RegisterUserUseCase:
 
     def execute(self):
         self.validate_params()
-        user = get_collection('users', {
-            '_deleted': False,
-            '_id': ObjectId(self.user_id)
-        })
+        user = get_collection('users', {'_id': ObjectId(self.user_id)})
         if not user:
             return not_found(
                 f"Usuario no encontrado con el id: {str(self.user_id)}"

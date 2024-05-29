@@ -14,8 +14,11 @@ import json
 class LoginUseCase:
     def __init__(self, login_raw_data):
         self.login_raw_data = login_raw_data
-        self.user = get_collection(
-            'users', {'email': self.login_raw_data['email']})
+        self.user = get_collection('users', {
+            'email': self.login_raw_data['email'],
+            'activated': True,
+            '_deleted': False,
+        })
 
     def execute(self):
         self.validate_params()

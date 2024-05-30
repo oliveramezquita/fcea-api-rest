@@ -11,14 +11,13 @@ from dateutil import parser
 class DataProccessUseCase:
     def __init__(self, raw_data):
         self.raw_data = raw_data
-        # self.site_id = raw_data['answer']['answerId']
+        self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
-        # self._insert_formsapp_raw_data(self.raw_data)
-        # data = parse_data(self.raw_data)
+        self._insert_formsapp_raw_data(self.raw_data)
+        data = parse_data(self.raw_data)
         try:
-            print(self.raw_data)
-            # self._insert_site(data)
+            self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
             return error(e.args[0])

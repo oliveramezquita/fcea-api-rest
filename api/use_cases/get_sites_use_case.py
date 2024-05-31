@@ -4,7 +4,7 @@ from urllib.parse import parse_qs
 from django.http import HttpResponse
 from bson import ObjectId
 from datetime import datetime, timedelta
-from api.constants import IGNORE_KEYS, ARRAYS_VALUES
+from api.constants import IGNORE_KEYS, ARRAYS_VALUES, EXCEL_HEADER
 from fcea_monitoreo.settings import BASE_URL
 import json
 import openpyxl
@@ -179,7 +179,8 @@ class GetSitesUseCase:
         return data
 
     def create_xls_file(self, sites):
-        header = self._get_key_list(sites)
+        # header = self._get_key_list(sites)
+        header = EXCEL_HEADER
         wb = openpyxl.Workbook()
         sheet = wb.active
         sheet.append(header)

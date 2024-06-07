@@ -45,13 +45,13 @@ def scores_calculation(site_id):
 def ph_calculation(ph, ph_rfs):
     magnitudes = abs(ph - ph_rfs)
     score = 0
-    if magnitudes <= 0.5:
+    if magnitudes == 0:
         score = 1
-    elif magnitudes <= 1.0:
+    elif magnitudes <= 0.5:
         score = 2
-    elif magnitudes <= 1.5:
+    elif magnitudes <= 1.0:
         score = 3
-    elif magnitudes <= 2.0:
+    elif magnitudes <= 1.5:
         score = 4
     else:
         score = 5
@@ -77,7 +77,8 @@ def water_temperature_calculation(temperature, temperature_rfs):
 
 
 def saturation_calculation(saturation, saturation_rfs):
-    change = saturation / saturation_rfs
+    change = saturation / \
+        saturation_rfs if saturation_rfs > saturation else saturation_rfs / saturation
     score = 0
     if change >= 0.8:
         score = 1

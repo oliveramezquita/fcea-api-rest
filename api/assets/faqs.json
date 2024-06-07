@@ -62,7 +62,7 @@
                     "answer": [
                         "Los formatos de campo digitales son herramientas para la captura de los resultados del monitoreo de parámetros físico-químicos, biológicos y paisajísticos. Existen dos tipos de formatos digitales; uno para el sitio de referencia y otro para los sitios de evaluación.",
                         "Para poder acceder a una interpretación de los resultados, un primer paso es contar con los datos del sitio de referencia, por tal, se deberá de seguir la siguiente ruta de captura:",
-                        "<img src='http://localhost:5173/src/assets/images/RutaCapturaFormatoDeCampo.jpg' alt='Ruta para la captura de los resultados en los formatos de campo digitales' width='100%'>"
+                        "<img src='https://api.calidadagua.mx/media/images/RutaCapturaFormatoDeCampo.jpg' alt='Ruta para la captura de los resultados en los formatos de campo digitales' width='100%'>"
                     ]
                 }
             ]

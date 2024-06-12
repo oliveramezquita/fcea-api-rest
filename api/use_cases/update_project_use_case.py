@@ -107,3 +107,21 @@ class UpdateProjectUseCase:
                 {'_id': ObjectId(self.project_id)},
                 {'geojson_file': None}
             )
+
+    def delete(self):
+        project = get_collection('projects', {
+            '_id': ObjectId(self.project_id)
+        })
+        if not project:
+            return not_found(
+                f"No se encontró ningún proyecto con el id: {str(self.project_id)}"
+            )
+        try:
+            update_document(
+                'projects',
+                {'_id': ObjectId(self.project_id)},
+                {'_deleted': True}
+            )
+            return ok(['Monitoreo eliminado exitosamente'])
+        except Exception as e:
+            return error(e.args[0])

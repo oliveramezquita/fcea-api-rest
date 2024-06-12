@@ -40,7 +40,13 @@ class GetSitesUseCase:
             filters = {}
             if self.project:
                 project = get_collection(
-                    'projects', {'name': self.project, 'year': int(self.year), 'month': self.month, 'season': self.season})
+                    'projects', {
+                        'name': self.project,
+                        'year': int(self.year),
+                        'month': self.month,
+                        'season': self.season,
+                        '_deleted': False,
+                    })
                 if project:
                     filters['project_id'] = project[0]['_id']
                     if self.state:
@@ -94,7 +100,8 @@ class GetSitesUseCase:
             return error(e.args[0])
 
     def get_filter_projects(self):
-        project_filter = {'name': self.project} if self.project else None
+        project_filter = {'name': self.project,
+                          '_deleted': False} if self.project else {'_deleted': False}
         projects = get_collection('projects', project_filter)
         project_list = []
         monitoring_periods_list = []
@@ -122,7 +129,8 @@ class GetSitesUseCase:
         return distinct_list_projects
 
     def get_filter_by_project(self, project_name):
-        projects = get_collection('projects', {'name': project_name})
+        projects = get_collection(
+            'projects', {'name': project_name, '_deleted': False})
         monitoring_period_list = []
         for project in projects:
             monitoring_period_list.append(

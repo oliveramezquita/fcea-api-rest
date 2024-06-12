@@ -10,6 +10,7 @@ class CreateProjectUseCase:
         self.project_raw_data['activated'] = True
         self.project_raw_data['rfs_data'] = {}
         self.project_raw_data['its_data'] = {}
+        self.project_raw_data['_deleted'] = False
 
     def execute(self):
         self.validate_params()
@@ -63,6 +64,7 @@ class CreateProjectUseCase:
                     'season': self.project_raw_data['season'],
                     'year': int(self.project_raw_data['year']),
                     'month': self.project_raw_data['month'],
+                    '_deleted': False,
                 })
         except Exception as e:
             return error(e.args[0])

@@ -804,6 +804,34 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete project",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ACCESS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}api/project/664d49862b05e07a314ba971",
+									"host": [
+										"{{URL}}api"
+									],
+									"path": [
+										"project",
+										"664d49862b05e07a314ba971"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

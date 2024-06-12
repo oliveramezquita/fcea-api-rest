@@ -164,6 +164,10 @@ class ProjectViewById(APIView):
                 project_raw_data=request.data, project_id=project_id)
             return use_case.execute()
 
+    def delete(self, request, project_id):
+        use_case = UpdateProjectUseCase(request, project_id)
+        return use_case.delete()
+
 
 class LoginView(APIView):
     def post(self, request):

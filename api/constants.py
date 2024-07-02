@@ -36,7 +36,7 @@ EXCEL_HEADER = [
     'Fotografia 2',
     'Notas',
     'pH',
-    'Nitrogeno Amoniacal (mg/L)',
+    'Nitrógeno Amoniacal (mg/L)',
     'Ortofosfatos (mg/L)',
     'Temperatura Agua (°C)',
     'Temperatura Ambiental (°C)',

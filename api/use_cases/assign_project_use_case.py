@@ -56,8 +56,6 @@ class AssignProjectUseCase:
         else:
             self.new_users = self.project_raw_data[self.site_type]['users']
         project[self.site_type]['users'] = self.project_raw_data[self.site_type]['users']
-        if isinstance(project[self.site_type]['users'][0], list):
-            project[self.site_type]['users'] = project[self.site_type]['users'][0]
         return project
 
     def update(self, project):

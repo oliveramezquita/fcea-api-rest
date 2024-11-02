@@ -47,6 +47,8 @@ class AssignProjectUseCase:
 
     def match_projects(self, project):
         project[self.site_type]['url_form'] = self.project_raw_data[self.site_type]['url_form']
+        if isinstance(self.project_raw_data[self.site_type]['users'][0], list):
+            self.project_raw_data[self.site_type]['users'] = self.project_raw_data[self.site_type]['users'][0]
         if 'users' in project[self.site_type] and len(project[self.site_type]['users']) > 0:
             s = set(project[self.site_type]['users'])
             self.new_users = [
@@ -54,10 +56,12 @@ class AssignProjectUseCase:
         else:
             self.new_users = self.project_raw_data[self.site_type]['users']
         project[self.site_type]['users'] = self.project_raw_data[self.site_type]['users']
-
+        if isinstance(project[self.site_type]['users'][0], list):
+            project[self.site_type]['users'] = project[self.site_type]['users'][0]
         return project
 
     def update(self, project):
+
         if '_id' in project:
             del project['_id']
         return update_document(

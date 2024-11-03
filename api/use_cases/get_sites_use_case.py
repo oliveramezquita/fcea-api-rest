@@ -133,8 +133,10 @@ class GetSitesUseCase:
             'projects', {'name': project_name, '_deleted': False})
         monitoring_period_list = []
         for project in projects:
-            monitoring_period_list.append(
-                f"{project['month']} {project['year']}")
+            period = f"{project['month']} {project['year']}"
+            if period not in monitoring_period_list:
+                monitoring_period_list.append(period)
+
         return monitoring_period_list
 
     def get_sites(self, filters):

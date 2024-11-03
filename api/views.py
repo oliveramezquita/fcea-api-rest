@@ -235,8 +235,8 @@ class FaqsView(APIView):
 
 
 class HistoricalGraphsView(APIView):
-    def get(self, request, basin):
-        use_case = HistoricalGraphsUseCase(request, basin)
+    def get(self, request):
+        use_case = HistoricalGraphsUseCase(request)
         return use_case.execute()
 
 

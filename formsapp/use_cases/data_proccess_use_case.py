@@ -20,8 +20,7 @@ class DataProccessUseCase:
         try:
             self._insert_site(data)
             return created(['The data has been saved successfully'])
-        except Exception as e:
-            # return error(e.args[0])
+        except Exception:
             return error(traceback.format_exc())
 
     def _insert_formsapp_raw_data(self, data):

@@ -1,3 +1,4 @@
+import traceback
 from formsapp.scripts.formsapp_parse import parse_data
 from api.helpers.http_responses import created, error
 from formsapp.scripts import formulas
@@ -20,13 +21,15 @@ class DataProccessUseCase:
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception as e:
-            return error(e.args[0])
+            # return error(e.args[0])
+            return error(traceback.format_exc())
 
     def _insert_formsapp_raw_data(self, data):
         data['_id'] = self.site_id
         insert_document('formsapp_raw_data', data, {'_id': self.site_id})
 
     def _insert_site(self, data):
+        mapped_data = {}
         city, state = get_geocode(
             float(data.get('ubicacion_del_sitio_de_monitoreo/latitud')),
             float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
@@ -34,7 +37,6 @@ class DataProccessUseCase:
         user_id, institution = self._get_user(data.get('correo_electronico'))
         project = get_collection(
             'projects', {'_id': ObjectId(data.get('proyecto'))})
-        mapped_data = {}
         mapped_data['_id'] = ObjectId(self.site_id)
         mapped_data['project_id'] = ObjectId(data.get('proyecto'))
         mapped_data['cuenca'] = data.get('cuenca')

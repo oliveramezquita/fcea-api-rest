@@ -176,13 +176,11 @@ def get_macroinvertebrates_average_score(macroinvertebrate_list):
     )
     if not macroinvertebrate_list:
         return 4.1
-    print(macroinvertebrate_list)
-    print(type(macroinvertebrate_list[0]["puntaje"]))
-    return round(
-        sum([x["puntaje"] for x in macroinvertebrate_list]) /
-        len(macroinvertebrate_list),
-        2,
-    )
+    sum_puntaje = 0
+    for x in macroinvertebrate_list:
+        if isinstance(x['puntaje'], int):
+            sum_puntaje = sum_puntaje + x['puntaje']
+    return round((sum_puntaje / len(macroinvertebrate_list)), 2)
 
 
 # def get_ch(data):

@@ -70,7 +70,7 @@ class GetUsersUseCase:
             return ok_paginated(
                 paginator,
                 page,
-                UserSerializer(data, many=True).data
+                UserSerializer(page.object_list, many=True).data
             )
 
         except Exception as e:

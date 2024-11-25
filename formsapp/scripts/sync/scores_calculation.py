@@ -182,11 +182,11 @@ def macroinvertebrates_average_score(macroinvertebrate_list):
     )
     if not macroinvertebrate_list:
         return 4.1
-    return round(
-        sum([x["puntaje"] for x in macroinvertebrate_list])
-        / len(macroinvertebrate_list),
-        2,
-    )
+    sum_puntaje = 0
+    for x in macroinvertebrate_list:
+        if isinstance(x['puntaje'], int):
+            sum_puntaje = sum_puntaje + x['puntaje']
+    return round(sum_puntaje / len(macroinvertebrate_list), 2)
 
 
 def calculate_biotic_grade(macroinvertebrate_list):

@@ -45,7 +45,7 @@ def distinct_collection(collection, value, filter=None):
 
 def insert_document(collection, data, filter=None):
     collection_handle = _get_collection_handle(collection)
-    if collection_handle.find_one(filter):
+    if filter and collection_handle.find_one(filter):
         return False
     else:
         collection_handle.insert_one(data)

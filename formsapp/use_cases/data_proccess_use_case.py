@@ -24,8 +24,9 @@ class DataProccessUseCase:
             return error(traceback.format_exc())
 
     def _insert_formsapp_raw_data(self, data):
-        data['_id'] = self.site_id
-        insert_document('formsapp_raw_data', data, {'_id': self.site_id})
+        data['_id'] = ObjectId()
+        resp = insert_document('formsapp_raw_data', data)
+        print(resp)
 
     def _insert_site(self, data):
         mapped_data = {}

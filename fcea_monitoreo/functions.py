@@ -24,18 +24,24 @@ def decrypt(enc):
 
 def get_altitude(lat, lng):
     response = get_elevation_request(lat, lng)
-    data = response.json()['results'][0]
-    return "{:.2f}".format(data['elevation'])
+    try:
+        data = response.json()['results'][0]
+        return "{:.2f}".format(data['elevation'])
+    except Exception:
+        return "0"
 
 
 def get_geocode(lat, lng):
     response = get_geocode_request(lat, lng)
-    data = response.json()['results'][0]['address_components']
-    locality = next(
-        (item for item in data if 'locality' in item['types']), None)
-    administrative_area_level_1 = next(
-        (item for item in data if 'administrative_area_level_1' in item['types']), None)
-    return locality['long_name'], administrative_area_level_1['long_name']
+    try:
+        data = response.json()['results'][0]['address_components']
+        locality = next(
+            (item for item in data if 'locality' in item['types']), None)
+        administrative_area_level_1 = next(
+            (item for item in data if 'administrative_area_level_1' in item['types']), None)
+        return locality['long_name'], administrative_area_level_1['long_name']
+    except Exception:
+        return "", ""
 
 
 def send_email(template, context):

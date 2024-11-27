@@ -15,7 +15,6 @@ class DataProccessUseCase:
         self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
-        print(self.raw_data)
         self._insert_formsapp_raw_data(self.raw_data)
         data = parse_data(self.raw_data)
         try:
@@ -26,8 +25,7 @@ class DataProccessUseCase:
 
     def _insert_formsapp_raw_data(self, data):
         data['_id'] = ObjectId()
-        resp = insert_document('formsapp_raw_data', data)
-        print(f"Print raw data status insert: {resp}")
+        insert_document('formsapp_raw_data', data)
 
     def _insert_site(self, data):
         mapped_data = {}

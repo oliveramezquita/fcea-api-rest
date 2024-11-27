@@ -15,6 +15,7 @@ class DataProccessUseCase:
         self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
+        print(self.raw_data)
         self._insert_formsapp_raw_data(self.raw_data)
         data = parse_data(self.raw_data)
         try:

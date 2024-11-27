@@ -15,6 +15,8 @@ class GetProjectByIdUseCase:
             })
             if not projects:
                 return not_found(f"No project found with id {str(self.project_id)}")
+            if projects[0]['institutions'] == 'null':
+                projects[0]['institutions'] = ''
             return ok(ProjectSerializer(projects[0]).data)
 
         except Exception as e:

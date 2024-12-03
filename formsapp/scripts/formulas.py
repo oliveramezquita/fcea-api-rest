@@ -133,10 +133,12 @@ def get_catalog_of_macroinvertebrate_scores():
 def get_macroinvertabrates(data):
     """Get macroinvertabrates"""
     macroinvertabrates = []
-    M_PREFIX = "macroinvertebrados_bentonicos"
+    M_PREFIXS = ["macroinvertebrados_bentonicos",
+                 "macroinvertebrados_acuaticos"]
     groups = []
     for key in data.keys():
-        if M_PREFIX in key:
+        any_key = any(prefix in key for prefix in M_PREFIXS)
+        if any_key:
             groups.append(key)
     for group in groups:
         families = data.get(group)

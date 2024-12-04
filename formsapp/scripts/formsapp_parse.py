@@ -38,6 +38,9 @@ def parse_data(formsapp_data):
     data = {}
     for answer in answers:
         key_value = ignore_keys(answer.keys())
+        if not key_value:
+            continue
+
         key_name = snake(questions[answer['q']]['name'])
         parent = ""
         if 'parent' in questions[answer['q']]:
@@ -102,7 +105,7 @@ def clean_text(text):
 def ignore_keys(keys):
     key_list = list(keys)
     key_result = list(set(key_list) - set(IGNORE_KEYS))
-    return key_result[0]
+    return key_result[0] if len(key_result) > 0 else None
 
 
 def snake(s):

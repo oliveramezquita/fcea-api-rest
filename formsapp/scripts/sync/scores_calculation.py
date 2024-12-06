@@ -98,14 +98,17 @@ def turbidity_calculation(turbidity, turbidity_rfs):
     score = 0
     if change < 5:
         score = 1
-    elif change <= 10:
+    elif change >= 5:
         score = 2
-    elif change <= 15:
+    elif change >= 10:
         score = 3
-    elif change <= 20:
+    elif change >= 15:
         score = 4
+    elif change >= 20:
+        score = 5
     else:
         score = 5
+
     return score, set_color(score)
 
 

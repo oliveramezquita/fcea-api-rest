@@ -94,21 +94,23 @@ def saturation_calculation(saturation, saturation_rfs):
 
 
 def turbidity_calculation(turbidity, turbidity_rfs):
+    print(f"turbidity_rfs: {turbidity_rfs}")
     change = turbidity - turbidity_rfs
+    print(f"change: {change}")
     score = 0
     if change < 5:
         score = 1
-    elif change >= 5:
+    elif change > 4 and change < 10:
         score = 2
-    elif change >= 10:
+    elif change > 9 and change < 15:
         score = 3
-    elif change >= 15:
+    elif change > 14 and change < 20:
         score = 4
-    elif change >= 20:
+    elif change > 19:
         score = 5
     else:
         score = 5
-
+    print(f"score: {score}")
     return score, set_color(score)
 
 

@@ -23,7 +23,9 @@ class LoginUseCase:
     def execute(self):
         self.validate_params()
         if self.authentication():
-            dump = json.dumps(self.auth_data())
+            auth_data = self.auth_data()
+            print(f'auth_data: {auth_data}')
+            dump = json.dumps(auth_data)
             return HttpResponse(dump, content_type='application/json')
         return bad_request('Acceso incorrecto', HTTP_403_FORBIDDEN)
 

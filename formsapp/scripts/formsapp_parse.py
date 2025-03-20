@@ -50,6 +50,8 @@ def parse_data(formsapp_data):
             data[f"{parent}{key_name}"] = answer[key_value]
 
         if questions[answer['q']]['type'] in GROUP_BY_TYPE['image']:
+            print(f'answer: {answer}')
+            print(f'key_value: {key_value}')
             data[f"{parent}{key_name}"] = answer[key_value]['urls']
 
         if questions[answer['q']]['type'] in GROUP_BY_TYPE['macroinvertebrate']:

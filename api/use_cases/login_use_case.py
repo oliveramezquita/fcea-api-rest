@@ -24,10 +24,8 @@ class LoginUseCase:
         self.validate_params()
         if self.authentication():
             auth_data = self.auth_data()
-            print(f'auth_data: {auth_data}')
             auth_data['accessToken'] = auth_data['accessToken'].decode('utf-8')
             dump = json.dumps(auth_data, indent=4)
-            print(f'dump: {dump}')
             return HttpResponse(dump, content_type='application/json')
         return bad_request('Acceso incorrecto', HTTP_403_FORBIDDEN)
 

@@ -46,26 +46,27 @@ def parse_data(formsapp_data):
         if 'parent' in questions[answer['q']]:
             parent = f"{snake(questions[answer['q']]['parent'])}/"
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['text']:
-            data[f"{parent}{key_name}"] = answer[key_value]
+        key = f"{parent}{key_name}"
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['text'] and key in data:
+            data[key] = answer[key_value]
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['image']:
-            data[f"{parent}{key_name}"] = answer[key_value]['urls']
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['image'] and key in data:
+            data[key] = answer[key_value]['urls']
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['macroinvertebrate']:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['macroinvertebrate'] and key in data:
             if len(answer[key_value]) > 0:
                 key_macroinvertebrate = f"{parent}{key_name.upper()}"
                 data[key_macroinvertebrate] = " ".join(
                     m['t'].lower() for m in answer[key_value])
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['select']:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['select'] and key in data:
             if len(answer[key_value]) == 1:
-                data[f"{parent}{key_name}"] = answer[key_value][0]['t']
+                data[key] = answer[key_value][0]['t']
             elif len(answer[key_value]) > 1:
                 values = []
                 for i in answer[key_value]:
                     values.append(i['t'])
-                data[f"{parent}{key_name}"] = values
+                data[key] = values
 
         if questions[answer['q']]['type'] in GROUP_BY_TYPE['grid']:
             d = data.copy()

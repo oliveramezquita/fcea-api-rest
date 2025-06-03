@@ -16,8 +16,8 @@ class DataProccessUseCase:
 
     def proccess(self):
         self._insert_formsapp_raw_data(self.raw_data)
-        data = parse_data(self.raw_data)
         try:
+            data = parse_data(self.raw_data)
             self._insert_site(data)
             return created(['The data has been saved successfully'])
         except Exception:

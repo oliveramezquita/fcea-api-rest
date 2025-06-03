@@ -37,7 +37,7 @@ class DataProccessUseCase:
         print(ObjectId(data.get('proyecto')))
         project = get_collection(
             'projects', {'_id': ObjectId(data.get('proyecto'))})
-        print(project)
+        print(data)
         mapped_data['_id'] = ObjectId(self.site_id)
         mapped_data['project_id'] = ObjectId(data.get('proyecto'))
         mapped_data['cuenca'] = data.get('cuenca')

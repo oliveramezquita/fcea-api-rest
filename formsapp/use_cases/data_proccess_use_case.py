@@ -34,10 +34,8 @@ class DataProccessUseCase:
             float(data.get('ubicacion_del_sitio_de_monitoreo/longitud')),
         )
         user_id, institution = self._get_user(data.get('correo_electronico'))
-        print(ObjectId(data.get('proyecto')))
         project = get_collection(
             'projects', {'_id': ObjectId(data.get('proyecto'))})
-        print(data)
         mapped_data['_id'] = ObjectId(self.site_id)
         mapped_data['project_id'] = ObjectId(data.get('proyecto'))
         mapped_data['cuenca'] = data.get('cuenca')

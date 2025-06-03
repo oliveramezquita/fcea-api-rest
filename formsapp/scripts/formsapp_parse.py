@@ -36,6 +36,7 @@ def parse_data(formsapp_data):
 
     answers = formsapp_data['answer']['answers']
     data = {}
+    print(answers)
     for answer in answers:
         key_value = ignore_keys(answer.keys())
         if not key_value:

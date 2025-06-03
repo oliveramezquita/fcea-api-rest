@@ -36,7 +36,6 @@ def parse_data(formsapp_data):
 
     answers = formsapp_data['answer']['answers']
     data = {}
-    print(answers)
     for answer in answers:
         key_value = ignore_keys(answer.keys())
         if not key_value:
@@ -48,19 +47,19 @@ def parse_data(formsapp_data):
             parent = f"{snake(questions[answer['q']]['parent'])}/"
 
         key = f"{parent}{key_name}"
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['text'] and key in data:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['text']:
             data[key] = answer[key_value]
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['image'] and key in data:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['image']:
             data[key] = answer[key_value]['urls']
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['macroinvertebrate'] and key in data:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['macroinvertebrate']:
             if len(answer[key_value]) > 0:
                 key_macroinvertebrate = f"{parent}{key_name.upper()}"
                 data[key_macroinvertebrate] = " ".join(
                     m['t'].lower() for m in answer[key_value])
 
-        if questions[answer['q']]['type'] in GROUP_BY_TYPE['select'] and key in data:
+        if questions[answer['q']]['type'] in GROUP_BY_TYPE['select']:
             if len(answer[key_value]) == 1:
                 data[key] = answer[key_value][0]['t']
             elif len(answer[key_value]) > 1:

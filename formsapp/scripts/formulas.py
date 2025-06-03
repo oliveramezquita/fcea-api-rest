@@ -39,7 +39,7 @@ def custom_float(data, key):
 
 def get_es_sitio_de_referencia(value):
     """Get if it is a reference site"""
-    if value.lower() == "si":
+    if value and value.lower() == "si":
         return True
     else:
         return False

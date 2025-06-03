@@ -15,8 +15,8 @@ class DataProccessUseCase:
         self.site_id = raw_data['answer']['answerId']
 
     def proccess(self):
-        self._insert_formsapp_raw_data(self.raw_data)
         try:
+            self._insert_formsapp_raw_data(self.raw_data)
             data = parse_data(self.raw_data)
             self._insert_site(data)
             return created(['The data has been saved successfully'])
@@ -124,7 +124,7 @@ class DataProccessUseCase:
             '_deleted': False,
         })
         if not user:
-            return email
+            return email, ""
         return user[0]['_id'], user[0]['institution']
 
     def _get_sitio_de_referencias(self, data, year, month):

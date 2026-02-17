@@ -1,0 +1,8 @@
+{% extends "mail_templated/base.html" %}
+
+{% block subject_appendix %}{{ subject }}{% endblock %}
+
+{% block html_content %}
+<p><b>answerId:</b> {{ answer_id }}</p>
+<pre style="white-space: pre-wrap;">{{ log_text }}</pre>
+{% endblock %}

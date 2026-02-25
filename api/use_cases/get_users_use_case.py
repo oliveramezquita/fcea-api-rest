@@ -1,9 +1,14 @@
+import traceback
+import logging
 from api.helpers.http_responses import ok_paginated, error
 from fcea_monitoreo.utils import get_collection
 from api.serializers.user_serializer import UserSerializer
 from urllib.parse import parse_qs
 from django.core.paginator import Paginator
 from api.constants import DEFAULT_PAGE_SIZE
+
+
+logger = logging.getLogger(__name__)
 
 
 class GetUsersUseCase:
@@ -74,4 +79,5 @@ class GetUsersUseCase:
             )
 
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])

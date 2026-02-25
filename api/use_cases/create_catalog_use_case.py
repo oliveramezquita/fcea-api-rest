@@ -1,7 +1,12 @@
+import traceback
+import logging
 from api.helpers.http_responses import created, bad_request, error
 from fcea_monitoreo.utils import insert_document
 from rest_framework import exceptions
 from bson import ObjectId
+
+
+logger = logging.getLogger(__name__)
 
 
 class CreateCatalogUseCase:
@@ -16,6 +21,7 @@ class CreateCatalogUseCase:
             try:
                 return created(['El catálogo ha sido creado correctamente'])
             except Exception as e:
+                logger.exception(traceback.format_exc())
                 return error(e.args[0])
         return bad_request('El catálogo ya existe')
 

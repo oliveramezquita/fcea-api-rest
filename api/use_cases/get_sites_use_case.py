@@ -1,3 +1,7 @@
+import json
+import openpyxl
+import traceback
+import logging
 from fcea_monitoreo.utils import get_collection
 from api.helpers.http_responses import not_found, error
 from urllib.parse import parse_qs
@@ -6,9 +10,9 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 from api.constants import IGNORE_KEYS, ARRAYS_VALUES, EXCEL_HEADER
 from fcea_monitoreo.settings import BASE_URL
-import json
-import openpyxl
-import time
+
+
+logger = logging.getLogger(__name__)
 
 
 class GetSitesUseCase:
@@ -22,7 +26,7 @@ class GetSitesUseCase:
         ) if 'monitoring_period' in params else []
         # year
         self.year = self.monitoring_period[1] if len(
-            self.monitoring_period) > 0 else None
+            self.monitoring_period) > 0 else 0
         # month
         self.month = self.monitoring_period[0] if len(
             self.monitoring_period) > 0 else None
@@ -61,6 +65,7 @@ class GetSitesUseCase:
                 return HttpResponse(json.dumps(sites), content_type='application/json')
             return not_found("No existen sitios dados de alta hasta el momento")
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def filter_by_dates(self):
@@ -86,7 +91,7 @@ class GetSitesUseCase:
                         'season': projects[index]['season'],
                         'geojson_data': self._get_geojson_file(projects[index]['name']),
                         'institutions': self.get_institutions(projects[index]['name'], projects[index]['institutions']) if 'institutions' in projects[index] else [],
-                        'excel_file': f"{BASE_URL}/media/files/{projects[index]['name']}_{projects[index]['season']}{str(monitoring_periods[index]).replace(' ','')}.xlsx",
+                        'excel_file': f"{BASE_URL}/media/files/{projects[index]['name']}_{projects[index]['season']}{str(monitoring_periods[index]).replace(' ', '')}.xlsx",
                     },
                     'projects': self.get_disctint_projects(projects),
                     'monitoring_periods': self.get_filter_by_project(projects[index]['name']),
@@ -97,6 +102,7 @@ class GetSitesUseCase:
                 return HttpResponse(json.dumps(resp), content_type='application/json')
             return not_found("No existen filtros actualmente")
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def get_filter_projects(self):

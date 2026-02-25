@@ -1,7 +1,12 @@
+import traceback
+import logging
 from api.helpers.http_responses import ok, not_found, error
 from fcea_monitoreo.utils import get_collection
 from api.serializers.catalog_serializer import CatalogSerializer
 from bson import ObjectId
+
+
+logger = logging.getLogger(__name__)
 
 
 class GetCatalogByIdUseCase:
@@ -22,4 +27,5 @@ class GetCatalogByIdUseCase:
             return ok(CatalogSerializer(catalog[0]).data)
 
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])

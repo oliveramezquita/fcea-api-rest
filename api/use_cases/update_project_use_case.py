@@ -1,3 +1,6 @@
+import os
+import traceback
+import logging
 from api.helpers.http_responses import ok, error, not_found
 from fcea_monitoreo.utils import update_document, get_collection
 from fcea_monitoreo.settings import BASE_URL
@@ -7,7 +10,9 @@ from django.http import QueryDict
 from django.core.files.storage import FileSystemStorage
 from rest_framework import exceptions
 from bson import ObjectId
-import os
+
+
+logger = logging.getLogger(__name__)
 
 
 class UpdateProjectUseCase:
@@ -33,6 +38,7 @@ class UpdateProjectUseCase:
                 data = self.update(project[0])
             return ok(ProjectSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def update(self, project):
@@ -124,4 +130,5 @@ class UpdateProjectUseCase:
             )
             return ok(['Monitoreo eliminado exitosamente'])
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])

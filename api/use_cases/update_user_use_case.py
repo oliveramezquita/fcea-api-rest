@@ -1,9 +1,14 @@
+import re
+import traceback
+import logging
 from api.helpers.http_responses import ok, error, not_found
 from rest_framework import exceptions
 from fcea_monitoreo.utils import update_document, get_collection
 from api.serializers.user_serializer import UserSerializer
 from bson import ObjectId
-import re
+
+
+logger = logging.getLogger(__name__)
 
 
 class UpdateUserUseCase:
@@ -22,6 +27,7 @@ class UpdateUserUseCase:
             data = self.update()
             return ok(UserSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def delete(self):
@@ -34,6 +40,7 @@ class UpdateUserUseCase:
             self.update()
             return ok(['Usuario eliminado exitosamente'])
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def validate_params(self):

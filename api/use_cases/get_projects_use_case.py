@@ -1,6 +1,11 @@
-from api.helpers.http_responses import ok, error, not_found
+import traceback
+import logging
+from api.helpers.http_responses import ok, error
 from fcea_monitoreo.utils import get_collection
 from api.serializers.project_serializer import ProjectSerializer
+
+
+logger = logging.getLogger(__name__)
 
 
 class GetProjectsUseCase:
@@ -11,4 +16,5 @@ class GetProjectsUseCase:
                 return ok(ProjectSerializer(projects, many=True).data)
             return ok([])
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])

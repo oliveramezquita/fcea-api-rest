@@ -1,3 +1,6 @@
+import os
+import traceback
+import logging
 from fcea_monitoreo.utils import insert_document, get_collection, update_document
 from api.helpers.http_responses import ok, created, bad_request, error, not_found
 from api.serializers.basin_serializer import BasinSerializer
@@ -6,7 +9,9 @@ from django.core.files.storage import FileSystemStorage
 from rest_framework import exceptions
 from bson import ObjectId
 from PIL import Image
-import os
+
+
+logger = logging.getLogger(__name__)
 
 
 class BasinUseCase:
@@ -20,6 +25,7 @@ class BasinUseCase:
             try:
                 return created(['La cuenca ha sido creada correctamente'])
             except Exception as e:
+                logger.exception(traceback.format_exc())
                 return error(e.args[0])
         return bad_request('La cuenca ya existe')
 
@@ -59,6 +65,7 @@ class BasinUseCase:
             basins = get_collection('basins', filters)
             return ok(BasinSerializer(basins, many=True).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def put(self):
@@ -76,6 +83,7 @@ class BasinUseCase:
             data = self._update()
             return ok(BasinSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def _update(self):
@@ -164,6 +172,7 @@ class BasinUseCase:
             )
             return ok(BasinSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def _upload_logo(self):
@@ -199,6 +208,7 @@ class BasinUseCase:
                 img.verify()
                 return True
         except (IOError, SyntaxError):
+            logger.exception(traceback.format_exc())
             return False
 
     def _delete_institution(self, basin, name_institution):
@@ -230,4 +240,5 @@ class BasinUseCase:
             )
             return ok(['Cuenca eliminada exitosamente'])
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])

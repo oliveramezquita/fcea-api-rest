@@ -1,3 +1,6 @@
+import re
+import traceback
+import logging
 from rest_framework import exceptions
 from fcea_monitoreo.utils import insert_document
 from api.helpers.http_responses import created, bad_request, error
@@ -5,7 +8,9 @@ from bson import ObjectId
 from urllib import parse
 from fcea_monitoreo.settings import ADMIN_URL
 from fcea_monitoreo.functions import encrypt, send_email
-import re
+
+
+logger = logging.getLogger(__name__)
 
 
 class CreateUserUseCase:
@@ -21,6 +26,7 @@ class CreateUserUseCase:
                 self.send_link()
                 return created(['El usuario ha sido creado correctamente'])
             except Exception as e:
+                logger.exception(traceback.format_exc())
                 return error(e.args[0])
         return bad_request('El usuario ya existe')
 

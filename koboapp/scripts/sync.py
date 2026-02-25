@@ -1,8 +1,13 @@
+import traceback
+import logging
 from fcea_monitoreo.utils import *
 from fcea_monitoreo.requests import kobo_request
 from koboapp.scripts.formulas import *
 from bson import ObjectId
 from datetime import datetime
+
+
+logger = logging.getLogger(__name__)
 
 
 def sync_projects():
@@ -16,6 +21,7 @@ def sync_projects():
         _insert_projects(filtered_data)
 
     except Exception as e:
+        logger.exception(traceback.format_exc())
         return e.args
 
 
@@ -50,6 +56,7 @@ def sync_submission():
                 )
 
     except Exception as e:
+        logger.exception(traceback.format_exc())
         return e.args
 
 

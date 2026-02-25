@@ -1,8 +1,13 @@
+import traceback
+import logging
 from api.helpers.http_responses import ok, error, not_found
 from fcea_monitoreo.utils import update_document, get_collection
 from rest_framework import exceptions
 from api.serializers.catalog_serializer import CatalogSerializer
 from bson import ObjectId
+
+
+logger = logging.getLogger(__name__)
 
 
 class UpdateCatalogUseCase:
@@ -23,6 +28,7 @@ class UpdateCatalogUseCase:
             data = self.update()
             return ok(CatalogSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def delete(self):
@@ -38,6 +44,7 @@ class UpdateCatalogUseCase:
             self.update()
             return ok(['Catálogo eliminado exitosamente'])
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def validate_params(self):

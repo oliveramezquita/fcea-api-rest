@@ -1,3 +1,7 @@
+import re
+import bcrypt
+import traceback
+import logging
 from api.helpers.http_responses import ok, error, not_found
 from rest_framework import exceptions
 from fcea_monitoreo.utils import update_document, get_collection
@@ -5,8 +9,9 @@ from api.serializers.user_serializer import UserSerializer
 from bson import ObjectId
 # from django.contrib.auth.models import User
 # from rest_framework.authtoken.models import Token
-import re
-import bcrypt
+
+
+logger = logging.getLogger(__name__)
 
 
 class RegisterUserUseCase:
@@ -25,6 +30,7 @@ class RegisterUserUseCase:
             data = self.update()
             return ok(UserSerializer(data).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def validate_params(self):

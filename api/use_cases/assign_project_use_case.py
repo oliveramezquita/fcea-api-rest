@@ -1,9 +1,14 @@
+import traceback
+import logging
 from api.helpers.http_responses import ok, error, not_found
 from fcea_monitoreo.utils import update_document, get_collection
 from rest_framework import exceptions
 from api.scripts.send_form_link import send_form_link
 from api.serializers.project_serializer import ProjectSerializer
 from bson import ObjectId
+
+
+logger = logging.getLogger(__name__)
 
 
 class AssignProjectUseCase:
@@ -31,6 +36,7 @@ class AssignProjectUseCase:
             updated_project = self.update(data)
             return ok(ProjectSerializer(updated_project).data)
         except Exception as e:
+            logger.exception(traceback.format_exc())
             return error(e.args[0])
 
     def validate_params(self):

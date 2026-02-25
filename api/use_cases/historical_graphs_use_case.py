@@ -1,8 +1,13 @@
+import json
+import traceback
+import logging
 from fcea_monitoreo.utils import get_collection, distinct_collection
 from django.http import HttpResponse
 from urllib.parse import parse_qs
-from bson import ObjectId
-import json
+from api.helpers.http_responses import error
+
+
+logger = logging.getLogger(__name__)
 
 
 class HistoricalGraphsUseCase:
@@ -16,7 +21,7 @@ class HistoricalGraphsUseCase:
         ) if 'monitoring_period' in params else []
         # year
         self.year = self.monitoring_period[1] if len(
-            self.monitoring_period) > 0 else None
+            self.monitoring_period) > 0 else 0
         # month
         self.month = self.monitoring_period[0] if len(
             self.monitoring_period) > 0 else None
@@ -28,75 +33,81 @@ class HistoricalGraphsUseCase:
         self.institution = params['institution'][0] if 'institution' in params else None
 
     def execute(self):
-        filters = {}
-        if self.basin:
-            basin = get_collection(
-                'projects', {
-                    'name': self.basin,
-                    'year': int(self.year),
-                    'month': self.month,
-                    'season': self.season,
-                    '_deleted': False,
-                })
-            if basin:
-                filters['project_id'] = basin[0]['_id']
-                if self.state:
-                    filters['estado'] = self.state
-                if self.institution:
-                    filters['institucion'] = self.institution
-        list_sites = self.get_sites(filters)
-        labels = []
-        series = {
-            'calidad_general': [],
-            'temperatura_agua': [],
-            'ph': [],
-            'oxigeno_disuelto': [],
-            'turbidez': [],
-            'nitratos': [],
-            'amonio': [],
-            'ortofosfatos': [],
-            'calidad_bosque_ribera': [],
-            'calidad_hidromorfologica': [],
-            'calificacion_macroinvertebrados': [],
-            'coliformes_totales': [],
-            'caudal': []
-        }
-        months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-        years = distinct_collection('sites', 'anio', {'cuenca': self.basin})
-        for ls in list_sites:
-            for year in years:
-                sites = get_collection(
-                    'sites', {'cuenca': self.basin, 'anio': year, 'nombre_sitio': ls})
-                # labels
-                for month in months:
-                    for site in sites:
-                        if month == site['mes']:
-                            label = f"{site['temporada']} {site['mes']} {site['anio']}"
-                            if label not in labels:
-                                labels.append(label)
-                # series
-                for _, (graph, data) in enumerate(series.items()):
-                    for site in sites:
-                        if not any(s['name'] == site['nombre_sitio'] for s in series[graph]):
-                            series[graph].append({
-                                'name': site['nombre_sitio'],
-                                'type': 'area' if site['es_sitio_referencia'] else 'line',
-                                'data': [self.get_value(site, graph)]
-                            })
-                        else:
-                            serie = next(
-                                (s for s in series[graph] if s['name'] == site['nombre_sitio']), None)
-                            if serie:
-                                serie['data'].append(
-                                    self.get_value(site, graph))
-        data = {
-            'labels': labels,
-            'series': series,
-        }
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        try:
+            filters = {}
+            if self.basin:
+                basin = get_collection(
+                    'projects', {
+                        'name': self.basin,
+                        'year': int(self.year),
+                        'month': self.month,
+                        'season': self.season,
+                        '_deleted': False,
+                    })
+                if basin:
+                    filters['project_id'] = basin[0]['_id']
+                    if self.state:
+                        filters['estado'] = self.state
+                    if self.institution:
+                        filters['institucion'] = self.institution
+            list_sites = self.get_sites(filters)
+            labels = []
+            series = {
+                'calidad_general': [],
+                'temperatura_agua': [],
+                'ph': [],
+                'oxigeno_disuelto': [],
+                'turbidez': [],
+                'nitratos': [],
+                'amonio': [],
+                'ortofosfatos': [],
+                'calidad_bosque_ribera': [],
+                'calidad_hidromorfologica': [],
+                'calificacion_macroinvertebrados': [],
+                'coliformes_totales': [],
+                'caudal': []
+            }
+            months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+            years = distinct_collection(
+                'sites', 'anio', {'cuenca': self.basin})
+            for ls in list_sites:
+                for year in years:
+                    sites = get_collection(
+                        'sites', {'cuenca': self.basin, 'anio': year, 'nombre_sitio': ls})
+                    # labels
+                    for month in months:
+                        for site in sites:
+                            if month == site['mes']:
+                                label = f"{site['temporada']} {site['mes']} {site['anio']}"
+                                if label not in labels:
+                                    labels.append(label)
+                    # series
+                    for _, (graph, data) in enumerate(series.items()):
+                        for site in sites:
+                            if not any(s['name'] == site['nombre_sitio'] for s in series[graph]):
+                                series[graph].append({
+                                    'name': site['nombre_sitio'],
+                                    'type': 'area' if site['es_sitio_referencia'] else 'line',
+                                    'data': [self.get_value(site, graph)]
+                                })
+                            else:
+                                serie = next(
+                                    (s for s in series[graph] if s['name'] == site['nombre_sitio']), None)
+                                if serie:
+                                    serie['data'].append(
+                                        self.get_value(site, graph))
+            data = {
+                'labels': labels,
+                'series': series,
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        except Exception as e:
+            logger.exception(traceback.format_exc())
+            return error(e.args[0])
 
     def get_value(self, site, graph):
+        logger.info(f"site: {site}")
         if graph == 'calidad_general':
             return site['scores']['total'][3]
         if graph == 'coliformes_totales':

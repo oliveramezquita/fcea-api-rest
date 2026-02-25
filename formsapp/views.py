@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from api.helpers.http_responses import error
 from formsapp.use_cases.data_proccess_use_case import DataProccessUseCase
 from formsapp.use_cases.get_raw_data_use_case import GetRawDataUseCase
-from formsapp.use_cases.get_scores_calculation_use_case import GetScoresCalculationUseCase
+from formsapp.use_cases.update_scores_calculation_use_case import UpdateScoresCalculationUseCase
 from fcea_monitoreo.functions import send_email
 
 logger = logging.getLogger(__name__)
@@ -70,6 +70,6 @@ class RawDataView(APIView):
 
 
 class ScoreSynchronizationView(APIView):
-    def get(self, request):
-        use_case = GetScoresCalculationUseCase()
+    def patch(self, request, site_id):
+        use_case = UpdateScoresCalculationUseCase(site_id)
         return use_case.execute()

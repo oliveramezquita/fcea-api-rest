@@ -1,45 +1,55 @@
+import traceback
+import logging
 from fcea_monitoreo.utils import get_collection, update_document
 from bson import ObjectId
+from api.helpers.http_responses import ok, error
+
+logger = logging.getLogger(__name__)
 
 _colors = get_collection('catalogs', {'name': 'Colores'})
 _interpretation = get_collection('catalogs', {'name': 'Evaluación'})
 
 
 def scores_calculation(site_id):
-    site = get_collection('sites', {'_id': ObjectId(site_id)})[0]
-    scores = {
-        'ph': None,
-        'water_temperature': None,
-        'saturation': None,
-        'turbidity': None,
-        'nitrates': None,
-        'ammonium': None,
-        'orthophosphates': None,
-        'macroinvertebrates_rating': calculate_biotic_grade(site['macroinvertebrados']),
-        'fecal_coliforms': calculate_coliforms_grade(site['coliformes_fecales']),
-        'ch': calculate_ch_grade(site['calidad_hidromorfologica']),
-        'cbr': calculate_cbr_grade(site['calidad_bosque_ribera']),
-    }
-    rfs = get_collection(
-        'sites', {'_id': ObjectId(site['sitio_referencia_id'])})
-    if rfs:
-        scores['ph'] = ph_calculation(site['ph'], rfs[0]['ph'])
-        scores['water_temperature'] = water_temperature_calculation(
-            site['temperatura_agua'], rfs[0]['temperatura_agua'])
-        scores['saturation'] = saturation_calculation(
-            site['oxigeno_disuelto'], rfs[0]['oxigeno_disuelto'])
-        scores['turbidity'] = turbidity_calculation(
-            site['turbidez'], rfs[0]['turbidez'])
-        scores['nitrates'] = nitrates_calculation(
-            site['nitratos'], rfs[0]['nitratos'])
-        scores['ammonium'] = ammonium_calculation(
-            site['amonio'], rfs[0]['amonio'])
-        scores['orthophosphates'] = orthophosphates_calculation(
-            site['ortofosfatos'], rfs[0]['ortofosfatos'])
-    scores['total'] = total_score(scores)
-    scores['interpretation'] = set_interpretation(scores['total'])
-    update_document('sites', {'_id': ObjectId(
-        site['_id'])}, {'scores': scores})
+    try:
+        site = get_collection('sites', {'_id': ObjectId(site_id)})[0]
+        scores = {
+            'ph': None,
+            'water_temperature': None,
+            'saturation': None,
+            'turbidity': None,
+            'nitrates': None,
+            'ammonium': None,
+            'orthophosphates': None,
+            'macroinvertebrates_rating': calculate_biotic_grade(site['macroinvertebrados']),
+            'fecal_coliforms': calculate_coliforms_grade(site['coliformes_fecales']),
+            'ch': calculate_ch_grade(site['calidad_hidromorfologica']),
+            'cbr': calculate_cbr_grade(site['calidad_bosque_ribera']),
+        }
+        rfs = get_collection(
+            'sites', {'_id': ObjectId(site['sitio_referencia_id'])})
+        if rfs:
+            scores['ph'] = ph_calculation(site['ph'], rfs[0]['ph'])
+            scores['water_temperature'] = water_temperature_calculation(
+                site['temperatura_agua'], rfs[0]['temperatura_agua'])
+            scores['saturation'] = saturation_calculation(
+                site['oxigeno_disuelto'], rfs[0]['oxigeno_disuelto'])
+            scores['turbidity'] = turbidity_calculation(
+                site['turbidez'], rfs[0]['turbidez'])
+            scores['nitrates'] = nitrates_calculation(
+                site['nitratos'], rfs[0]['nitratos'])
+            scores['ammonium'] = ammonium_calculation(
+                site['amonio'], rfs[0]['amonio'])
+            scores['orthophosphates'] = orthophosphates_calculation(
+                site['ortofosfatos'], rfs[0]['ortofosfatos'])
+        scores['total'] = total_score(scores)
+        scores['interpretation'] = set_interpretation(scores['total'])
+        update_document('sites', {'_id': ObjectId(
+            site['_id'])}, {'scores': scores})
+        return ok("El cálculo de los parámetros se actualizó correctamente.")
+    except Exception as e:
+        logger.exception(traceback.format_exc())
+        return error(e.args[0])
 
 
 def ph_calculation(ph, ph_rfs):

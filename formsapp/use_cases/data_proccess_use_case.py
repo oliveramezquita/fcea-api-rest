@@ -164,7 +164,7 @@ class DataProccessUseCase:
         mapped["sitio_referencia_id"] = sitio_ref_id
 
         # Si tu regla de negocio dice “no puede ser nulo”, aquí lo registramos como ERROR
-        if mapped["sitio_referencia_id"] is None:
+        if not mapped["es_sitio_referencia"] and mapped["sitio_referencia_id"] is None:
             self._err(
                 "sitio_referencia_id_required",
                 f"sitio_referencia_id es None. sitio_de_referencia='{sitio_ref_nombre}'. "
@@ -244,12 +244,12 @@ class DataProccessUseCase:
         )
 
         # Scores SOLO si hay sitio_referencia_id válido (evita el InvalidId que tenías)
-        if mapped["sitio_referencia_id"] is not None:
-            self._step("scores_calculation",
-                       lambda: scores_calculation(self.site_id))
-        else:
+        if not mapped["es_sitio_referencia"] and mapped["sitio_referencia_id"] is None:
             self._warn("scores_calculation",
                        "Saltado porque sitio_referencia_id es None.")
+        else:
+            self._step("scores_calculation",
+                       lambda: scores_calculation(self.site_id))
 
     # -------------------------
     # Queries
